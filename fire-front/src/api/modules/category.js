@@ -1,18 +1,26 @@
 import { API } from "@/api/axios";
 import { api_router } from "../api.router";
 const category = api_router.category;
-class Category{
-
-    async Create(data){
-        if (Object.keys(data).length != 0) {
-        await API.post(category.add,data).then(
-            res => {return res.data},
-            err => {console.log(err)}
-        )  
+const Category = {
+    async add(data) {
+        try {
+          if(data.name == ''){
+            return ['Введите корректное имя']
+          }
+          const result = await API.post(category.add,data);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
         }
-        
-
-    }
+      },
+    async getAll() {
+        try {
+          const result = await API.get(category.all);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      }
 
 }
 export {Category}

@@ -1,1 +1,39 @@
-@import url(./reset.scss);
+@import './reset.scss';
+@import './fonts.scss';
+*{
+    font-family: Montserrat;
+}
+$main_color:#E74C3C;
+.wrapper{
+    padding: 10px;
+    width: 100%;
+    max-width: 1980px;
+    margin: 0 auto;
+}
+.btn{
+    user-select: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    &:hover{
+        color: white;
+        transition: color 0.3s ease 0s;
+    }
+    &-root{
+    border: 1px solid $main_color ;
+    color: $main_color;
+    font-family: Montserrat;
+    font-weight: 600;
+    transition: background 0.4s ease-in-out 0s;
+    &:hover{
+        background: $main_color;
+        transition: background 0.4s ease 0s;
+    }
+
+
+    }
+
+}
+html, body{
+    overflow: hidden;
+}
