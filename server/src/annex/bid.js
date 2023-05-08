@@ -23,6 +23,8 @@ class Bid{
                 date:tm.hour + ':' + tm.minute + ' ' + tm.year + 'г.',
                 msg:data.msg
             })
+            console.log(NewBid)
+            console.log(data)
             await db.on();
             await NewBid.save().then(
                 (result) => {
@@ -62,7 +64,7 @@ class Bid{
         const data = req.body;
         if(Object.keys(data).length){
             await db.on();
-            await bid.deleteOne({_id:data.id}).then(
+            await bid.deleteOne({_id:data._id}).then(
                 (result) => {
                     res
                     .status(200)

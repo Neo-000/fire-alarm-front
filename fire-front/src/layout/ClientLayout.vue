@@ -20,5 +20,22 @@ import MenuClientHeader from '../components/MenuClientHeader.vue';
 </template>
 
 <style scoped>
-
+  .app_layout{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+  .header_layout{
+    width: 100%;
+  }
+  .content_layout{
+    width: 100%;
+    flex: 1 0 auto;
+  }
+  .footer_layout{
+    background: grey;
+    width: 100%;
+    flex: 0 0 auto;
+  }
 </style>

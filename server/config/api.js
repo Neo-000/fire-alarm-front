@@ -49,7 +49,27 @@ export const api = {
                 date:"дата создания",
                 msg:"Доп информация"
             }
+        },
+        "/all":{
+            http:"post",
+            title:"Получение всех заявок",
+            shema:{
+            }
+        },
+        "/delete":{
+            http:"post",
+            title:"Получение всех заявок",
+            shema:{
+                _id:"id элемента"
+            }
+        },
+        "/delete_all":{
+            http:"post",
+            title:"Удаление всех элементов",
+            shema:{
+            }
         }
+
     },
 
     "/services":{
