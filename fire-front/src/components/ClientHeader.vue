@@ -1,60 +1,99 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted} from 'vue';
-import { ElMessageBox } from 'element-plus';
+import { ElMessageBox, ElMessage  } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import {Location, PhoneFilled} from '@element-plus/icons-vue';
 import {Bid} from '../api/modules/bid.js'
 
+
+let ismobile=ref();
+window.addEventListener('resize' , () => {
+  const sizeX = document.documentElement.clientWidth;
+  if(sizeX <= 450){
+    ismobile.value = true
+  } else {
+    ismobile.value = false
+  }
+})
+
+const formSucsess = () => {
+  ElMessage({
+    message: 'Заявка отправлена',
+    type: 'success',
+  })
+}
+const formUnSucsess = () => {
+  ElMessage({
+    message: 'Ошибка сервера',
+    type: 'warning',
+  })
+}
+
+async function ApiBid () {
+    const [err, ApiBid] = await Bid.Create(numberValidateForm);
+    return ApiBid
+}
+
 const dialogVisible = ref(false)
 
 const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('Закрыть окно?')
+  ElMessageBox.confirm('Закрыть окно? Данные не будут сохранены')
     .then(() => {
-        form.firstname='',
-        form.msg='',
-        form.name='',
-        form.phone='',
-        form.surname=''
+      resetForm(formRef.value)
       done()
     })
     .catch(() => {
       // catch error
     })
 }
+const formRef = ref<FormInstance>()
 
-const ruleFormRef = ref<FormInstance>();
-const form = reactive({
-    name:"",
-    firstname: "",
-    surname: "",
-    phone: "",
-    msg:'Новая заявка на сайте'
-});
+const numberValidateForm = reactive({
+  name:"",
+  firstname: "",
+  surname: "",
+  phone: "",
+  msg:'Новая заявка на сайте'
 
-
-
-
-const rules = reactive<FormRules>({
-  name: [
-    { required: true, message: 'это обязательное поле', trigger: 'blur' },
-  ],
-  phone: [
-    { required: true, message: 'это обязательное поле', trigger: 'blur' },
-  ],
-  surname: [
-    { required: true, message: 'это обязательное поле', trigger: 'blur' },
-  ],
 })
 
-const submitForm = async () => {
-    console.log(form)
-    const res = await Bid.Create(form)
-    dialogVisible.value = false
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log('submit!')
+      ApiBid()
+      .then(
+        res =>{
+            console.log(res.status)
+            if(res.status >= 200 && res.status < 400){
+                formSucsess();
+            }
+        },
+        err => {formUnSucsess()}
+      );
+    //   console.log(r)
+      dialogVisible.value = false;
+      resetForm(formRef.value);
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
 }
 
-
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
 
 onMounted(() => {
+    const sizeX = document.documentElement.clientWidth;
+  if(sizeX <= 450){
+    ismobile.value = true
+  } else {
+    ismobile.value = false
+  }
 });
 
 </script>
@@ -85,47 +124,65 @@ onMounted(() => {
     v-model="dialogVisible"
     title="Оставте заявку"
     :before-close="handleClose"
-    :width="450"
+    :width="ismobile?320:450"
+    
   >
     <template #header>
        <p>Оставте заявку и в ближайшее время с вами свяжуться наши специалисты</p>
     </template>
     <el-form
-    label-position="left"
+    ref="formRef"
+    :model="numberValidateForm"
     label-width="100px"
-    :model="form"
-    style="max-width: 320px"
-    :rules="rules"
-    
-    >
+    class="demo-ruleForm"
+    :label-position="ismobile?'top':'left'"
+    style="max-width: 320"
+  >
         <el-form-item 
-        label="Фамилия"
-        prop="surname"
+        label="Имя" 
+        prop="name"
+        :rules="[
+            { required: true, message: 'Заполните', trigger: 'blur' },
+            { min: 2, max: 10, message: 'Введите корректное имя', trigger: 'change' }
+        ]"
         >
-            <el-input v-model="form.surname" 
+            <el-input v-model="numberValidateForm.name" 
             show-word-limit
             maxlength="10"/>
         </el-form-item>
-        <el-form-item label="Имя" prop="name">
-            <el-input v-model="form.name" 
+        <el-form-item 
+        label="Фамилия"
+        prop="surname"
+        :rules="[
+        { required: true, message: 'Заполните', trigger: 'blur' },
+        { min: 2, max: 10, message: 'Введите корректную фамилию', trigger: 'change' }
+      ]"
+        >
+            <el-input v-model="numberValidateForm.surname" 
             show-word-limit
             maxlength="10"/>
         </el-form-item>
         <el-form-item label="Отчество">
-            <el-input v-model="form.firstname" />
+            <el-input v-model="numberValidateForm.firstname" />
         </el-form-item>
-        <el-form-item label="Телефон" prop="phone">
-            <el-input v-model="form.phone" data-phone-pattern>
+        <el-form-item 
+        label="Телефон" 
+        prop="phone"
+        :rules="[
+        { required: true, message: 'Заполните', trigger: 'blur' },
+        { min:10,message: 'Введите корректный номер', trigger: 'change' }
+        ]">
+            <el-input v-model="numberValidateForm.phone" maxlength="10">
                 <template #prepend>+7</template>
             </el-input>
         </el-form-item>
-    </el-form>
+    <el-form-item class="mobile_bitton_form">
+      <el-button type="danger" @click="submitForm(formRef)">Отправить</el-button>
+      <el-button type="info" plain @click="resetForm(formRef)">Очистить</el-button>
+    </el-form-item>
+  </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false" type="danger">Отмена</el-button>
-        <el-button type="success" @click="submitForm()">
-          Отправить
-        </el-button>
       </span>
     </template>
   </el-dialog>
@@ -179,4 +236,10 @@ onMounted(() => {
         background-position: center center;
     }
 }
+.mobile_bitton_form{
+    @media (max-width:450px) {
+
+    }
+}
+
 </style>
