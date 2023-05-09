@@ -4,8 +4,19 @@
     font-family: Montserrat;
 }
 $main_color:#E74C3C;
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.pointer{
+    cursor: pointer;
+}
+.none-select{
+    user-select: none;
+}
 .wrapper{
-    padding: 10px;
+    padding: 10px 40px;
     width: 100%;
     max-width: 1980px;
     margin: 0 auto;

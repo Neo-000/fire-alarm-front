@@ -4,8 +4,12 @@ import { ElMessageBox, ElMessage  } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import {Location, PhoneFilled} from '@element-plus/icons-vue';
 import {Bid} from '../api/modules/bid.js'
+import {MAIN_INF} from '../config';
 
-
+const info = ref({
+    phone:MAIN_INF.phone,
+    location:MAIN_INF.location
+})
 let ismobile=ref();
 window.addEventListener('resize' , () => {
   const sizeX = document.documentElement.clientWidth;
@@ -106,11 +110,13 @@ onMounted(() => {
             <div class="contacts">
                 <div class="contact_item disp-mobile-none">
                     <el-icon color="#E74C3C"><Location /></el-icon>
-                    <span> г.Краснодар</span>
+                    <span>{{ info.location }}</span>
                 </div>
                 <div class="contact_item">
+                    <a :href="'tel:' + info.phone">
                     <el-icon color="#E74C3C"><PhoneFilled /></el-icon>
-                    <span> +7(961)-535-08-34</span>
+                    <span>{{ info.phone }}</span>
+                </a>
                 </div>
             </div>
             <div class="button btn btn-root" @click="dialogVisible = true">Заказать звонок</div>
@@ -224,7 +230,7 @@ onMounted(() => {
     // border: 1px solid black;
 }
 .logo{
-    width: 120px;
+    width: 220px;
     height: 60px;
     background: url('../assets/img/logo.svg') no-repeat;
     background-size: contain;
