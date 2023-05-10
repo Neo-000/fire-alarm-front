@@ -33,6 +33,8 @@ import { RouterLink, RouterView } from 'vue-router';
     position: relative;
     width: 100%;
     z-index: 100;
+    box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.304);
+    padding-bottom: 10px;
   }
   .content_layout{
     position: relative;

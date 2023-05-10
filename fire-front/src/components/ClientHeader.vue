@@ -185,7 +185,7 @@ onMounted(() => {
       <el-button type="danger" @click="submitForm(formRef)">Отправить</el-button>
       <el-button type="info" plain @click="resetForm(formRef)">Очистить</el-button>
     </el-form-item>
-  </el-form>
+    </el-form>
     <template #footer>
       <span class="dialog-footer">
       </span>
