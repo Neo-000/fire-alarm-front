@@ -4,7 +4,15 @@ const routes = [
     {
         name:'client',
         path:'/',
-        component: () => import('@/layout/ClientLayout')
+        component: () => import('@/layout/ClientLayout'),
+        redirect:'/home',
+        children:[
+            {
+                name:'Home',
+                path:'home',
+                component: () => import('@/views/HomePageClient')
+            }
+        ]
     },
     {
         name:'admin',
