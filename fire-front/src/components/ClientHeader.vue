@@ -34,8 +34,8 @@ const formUnSucsess = () => {
 }
 
 async function ApiBid () {
-    const [err, ApiBid] = await Bid.Create(numberValidateForm);
-    return ApiBid
+    const [err, res] = await Bid.Create(numberValidateForm);
+    return res
 }
 
 const dialogVisible = ref(false)
@@ -92,7 +92,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 onMounted(() => {
-    const sizeX = document.documentElement.clientWidth;
+  const sizeX = document.documentElement.clientWidth;
   if(sizeX <= 450){
     ismobile.value = true
   } else {
@@ -131,7 +131,6 @@ onMounted(() => {
     title="Оставте заявку"
     :before-close="handleClose"
     :width="ismobile?320:450"
-    
   >
     <template #header>
        <p>Оставте заявку и в ближайшее время с вами свяжуться наши специалисты</p>
@@ -197,10 +196,11 @@ onMounted(() => {
 <style scoped lang="scss">
 .wrapper{
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     @media (max-width:500px) {
         flex-direction: column;
+        align-items: center;
     }
 }
 .info{

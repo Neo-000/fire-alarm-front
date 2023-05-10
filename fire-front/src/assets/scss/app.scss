@@ -8,7 +8,6 @@ a{
     text-decoration: none;
     color: inherit;
 }
-
 .pointer{
     cursor: pointer;
 }
@@ -20,6 +19,9 @@ a{
     width: 100%;
     max-width: 1980px;
     margin: 0 auto;
+    @media (max-width:450px) {
+        padding: 2px;
+    }
 }
 .app_wrapper{
     height: 100%;
@@ -37,6 +39,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 14px;
     &:hover{
         color: white;
         transition: color 0.3s ease 0s;
