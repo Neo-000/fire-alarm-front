@@ -145,10 +145,12 @@ onMounted(() => {
 }
 
 .menu{
+  position: relative;
   overflow-y: auto;
   overflow-x: hidden;
   // height: 100%;
   width: 100%;
+  z-index: 105;
   @media (max-width:450px) {
     
   }

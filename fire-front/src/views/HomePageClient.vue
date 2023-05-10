@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted} from 'vue';
 import { ElMessageBox, ElMessage  } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import {Location, PhoneFilled} from '@element-plus/icons-vue';
+import {Location, PhoneFilled, Paperclip} from '@element-plus/icons-vue';
 import {Bid} from '../api/modules/bid.js'
 import {MAIN_INF} from '../config';
 
@@ -153,22 +153,149 @@ onMounted(() => {
                                 </el-form-item>
                         </el-form>
                 </div>
-                <div class="title">
+                <div class="title font--maxi">
                     Выполнение работ в противопожарных системах, электромонтаж, монтаж АУПТ
                 </div>
             </div>
         </div>
     </div>
     <div class="content-center">
-        это для инфоблока
-    </div>
-    <div class="content-bottom">
-        это для фото и прочей фигни
+      <div class="container">
+        <div class="photo_block block block1" id="aps">
+          <div class="str">
+            <span>
+              <el-icon color="red"><Paperclip /></el-icon>
+              Мы предлагаем профессиональный монтаж автоматизированных пожарных систем, основанный на индивидуальном подходе к каждому клиенту, учете его особенностей и желаний.
+            </span></div>
+        </div>
+        <div class="photo_block block block2" id="aupt">
+          <div class="str">
+            <span>
+              <el-icon color="red"><Paperclip /></el-icon>
+              Наша компания выберет тип пожарной системы, подходящий для вашего помещения и установит его строго в соответствии с государственными и международными стандартами и нормами.
+            </span></div>
+        </div>
+        <div class="photo_block block block3" id="slabo">
+          <div class="str">
+            <span>
+              <el-icon color="red"><Paperclip /></el-icon>
+              Монтаж слаботочных систем – это важный этап при обустройстве помещений любого назначения
+            </span></div>
+        </div>
+        <div class="photo_block block block4" id="video">
+          <div class="str">
+            <span>
+              <el-icon color="red"><Paperclip /></el-icon>
+              Мы установим современные камеры видеонаблюдения с разрешением от Full HD до 4K
+            </span></div>
+        </div>
+      </div>
     </div>
 </div>
 </template>
 
 <style scoped lang="scss">
+.container {
+  height: 400px;
+  width: 100%;
+  
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-end;
+  resize: both;
+  overflow: auto;
+}
+
+.block {
+  box-sizing: border-box;
+  // background: #48f;
+  margin: 5px;
+  // padding: 10px;
+  font-size: 30px;
+  // color: #fff;
+  transition: all 0.4s ease-in-out 0s;
+  &:hover{
+    transition: all 0.4s ease-in-out 0s;
+    background-position: bottom center !important;
+  }
+}
+
+.block1 {
+  width: calc(50% - 10px);
+  height: calc(100% - 10px);
+}
+
+.block2 {
+  width: calc(50% - 10px);
+  height: calc(50% - 10px);
+}
+
+.block3,
+.block4 {
+  width: calc(25% - 10px);
+  height: calc(50% - 10px);
+}
+
+.block4 {
+  margin-left: calc(-25% + 5px);
+}
+
+.block4 {
+  margin-left: calc(-25% + 5px);
+}
+.str{      
+  // text-indent: 20px;
+  text-align: left;
+  word-spacing:-2px;
+  // text-justify: distribute;
+  color: rgba(255, 255, 255, 0.89);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.733);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 10px 30px;
+  font-size: 15px;
+  transition: all 0.4s ease-in-out 0s;
+  opacity: 0.6;
+  &:hover{
+    opacity: 1;
+    transition: all 0.4s ease-in-out 0s;
+    backdrop-filter: blur(1px);
+    background: rgba(0, 0, 0, 0.822);
+    
+  }
+  @media (max-width:450px) {
+    font-size: 10px;
+    padding: 4px;
+  }
+}
+.photo_block{
+  border-radius: 4px;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+}
+
+#aps{
+    background: url('../assets/img/aps_montaj.jpeg');
+  }
+  #aupt{
+    background: url('../assets/img/aypt_montage.webp');
+  }
+  #slabo{
+    background: url('../assets/img/slabo_montaje.jpg');
+  }
+  #video{
+    background: url('../assets/img/video_montaje.jpg');
+  }
+
+.content-center{
+  width: 100%;
+}
 
 .homePage{
 overflow-y:auto;
@@ -177,6 +304,8 @@ padding: 10px 0;
 }
 .bannerHome{
     width: 100%;
+    border-radius: 4px;
+    margin-bottom: 20px;
     // height: 300px;
     background: url('../assets/img/banner2.png') no-repeat;
     background-position: center center;
@@ -226,15 +355,19 @@ padding: 10px 0;
             justify-content: center;
             text-align: center;
             flex-wrap: wrap;
+            word-spacing: 10px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.842);
             // font-size: 2.1vw;
             padding: 50px;
             // height: 100%;/
             // width: 50%;
-            background: rgba(0, 0, 0, 0.297);
+            background: rgba(32, 3, 3, 0.493);
             backdrop-filter: blur(2px);
             border-radius: 0 5px 5px 0;
-            width: 160px;
-            animation: banner_title 1s ease-in-out 0s forwards;
+            width: 50%;
+            // width: 160px;
+            // animation: banner_title 1s linear 0s forwards;
             @media (max-width:450px) {
             padding: 10px;
             font-size: 20px;
@@ -245,8 +378,40 @@ padding: 10px 0;
         }
     }
 }
+
+.text {
+  width: 29ch;
+  color: white;
+  font-family: monospace;
+  font-size: 30px;
+  white-space: nowrap; /* не переносить текст на другую строку */
+  overflow: hidden; /* скрываем переполнение контентом */
+  border-right: 3px solid white; /* рисуем курсор */
+  animation: cursor 0.75s step-end infinite, printed_text 5s steps(29);
+}
+
+@keyframes cursor {
+  0% {
+    border-color: white;
+  }
+
+  50% {
+    border-color: transparent;
+  }
+
+  100% {
+    border-color: white;
+  }
+}
+
+@keyframes printed_text {
+  from {
+    width: 0;
+  }
+}
+
 @keyframes banner_title {
-                from{width:160px; font-size: 0.1vw;}
-                to{width:50%; font-size: 2.1vw;}
-            }
+  from{opacity:0; width: 10px; font-size: 2px;}
+  to{opacity: 1; width: 50%;}
+}
 </style>

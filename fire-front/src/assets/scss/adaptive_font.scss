@@ -1,0 +1,12 @@
+$maxWidth: 1920;
+@mixin adaptiv-font($mobSize,$pcSize) {
+	$addSize: $pcSize - $mobSize;
+	$maxWidth: $maxWidth - 320;
+	font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth}));
+}
+
+.font--mini{@include adaptiv-font(12,15)}
+.font--maxi{@include adaptiv-font(17,30)}
+.font--normal{@include adaptiv-font(14,24)}
+.font--h1{@include adaptiv-font(16,26)}
+.font--h2{@include adaptiv-font(15,25)}

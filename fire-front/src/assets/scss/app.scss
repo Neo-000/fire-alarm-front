@@ -1,5 +1,6 @@
 @import './reset.scss';
 @import './fonts.scss';
+@import './adaptive_font.scss';
 *{
     font-family: Montserrat;
 }
@@ -17,7 +18,7 @@ a{
 .wrapper{
     padding: 10px 40px;
     width: 100%;
-    max-width: 1980px;
+    max-width: 1500px;
     margin: 0 auto;
     @media (max-width:450px) {
         padding: 2px;
