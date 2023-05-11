@@ -203,7 +203,7 @@ onMounted(() => {
   flex-flow: column wrap;
   justify-content: flex-end;
   resize: both;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .block {
@@ -211,10 +211,13 @@ onMounted(() => {
   // background: #48f;
   margin: 5px;
   // padding: 10px;
-  font-size: 30px;
+  // font-size: 30px;
   // color: #fff;
   transition: all 0.4s ease-in-out 0s;
-  &:hover{
+  @media (max-width:450px) {
+    // padding: 3px;
+  }
+  &:hover, &:focus{
     transition: all 0.4s ease-in-out 0s;
     background-position: bottom center !important;
   }
@@ -223,30 +226,41 @@ onMounted(() => {
 .block1 {
   width: calc(50% - 10px);
   height: calc(100% - 10px);
+  @media (max-width:450px) {
+    width: calc(40% - 10px);
+    // margin: 0;
+  }
 }
 
 .block2 {
   width: calc(50% - 10px);
   height: calc(50% - 10px);
+  @media (max-width:450px) {
+    width: calc(60% - 10px);
+    // margin: 0;
+  }
 }
 
 .block3,
 .block4 {
   width: calc(25% - 10px);
   height: calc(50% - 10px);
+  @media (max-width:450px) {
+    width: calc(30% - 10px);
+    // margin: 0;
+  }
 }
 
 .block4 {
   margin-left: calc(-25% + 5px);
-}
-
-.block4 {
-  margin-left: calc(-25% + 5px);
+  @media (max-width:450px) {
+    margin-left: calc(-30% + 5px);
+  }
 }
 .str{      
   // text-indent: 20px;
   text-align: left;
-  word-spacing:-2px;
+  // word-spacing:-2px;
   // text-justify: distribute;
   color: rgba(255, 255, 255, 0.89);
   width: 100%;
@@ -270,7 +284,7 @@ onMounted(() => {
   }
   @media (max-width:450px) {
     font-size: 10px;
-    padding: 4px;
+    padding: 5px;
   }
 }
 .photo_block{
@@ -343,7 +357,7 @@ padding: 10px 0;
                 backdrop-filter: blur(10px);
             }
             @media (max-width:450px) {
-            max-width: 320px;
+            max-width: 100%;
             width: 100%;
             height: 50%;
         }
