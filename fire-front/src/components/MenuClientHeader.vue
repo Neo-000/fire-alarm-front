@@ -67,25 +67,29 @@ onMounted(() => {
               <el-icon><CircleCloseFilled /></el-icon>
             </el-button>
           </template>
-          <el-menu
-        :default-active="activeIndex"
-        active-text-color="#c47a03"
-        text-color="#000"
-        class="el-menu-demo"
-        :mode="ismobile?'vertical':'horizontal'"
-        @select="handleSelect"
-      >
-    <el-menu-item index="1">Главная</el-menu-item>
-    <el-sub-menu index="2">
-      <template #title>Услуги</template>
-      <el-menu-item index="2-1" v-for="item in data.Category">
-        <router-link :to="'/services/' + item['_id']">
-          {{ item['name']}}
-        </router-link>
-      </el-menu-item>
-    </el-sub-menu>
-    <el-menu-item index="3">О нас</el-menu-item>
-        </el-menu>
+              <el-menu
+            :default-active="activeIndex"
+            active-text-color="#c47a03"
+            text-color="#000"
+            class="el-menu-demo"
+            :mode="ismobile?'vertical':'horizontal'"
+            @select="handleSelect"
+          >
+                <el-menu-item index="1" @click="visible=false">
+                  <router-link to="/" >Главная</router-link>
+                </el-menu-item>
+                <el-sub-menu index="2">
+                  <template #title>Услуги</template>
+                  <el-menu-item index="2-1" v-for="item in data.Category" @click="visible=false">
+                    <router-link :to="'/services/' + item['_id']">
+                      {{ item['name']}}
+                    </router-link>
+                  </el-menu-item>
+                </el-sub-menu>
+                <el-menu-item index="3" @click="visible=false">
+                  <router-link to="/about_us">О нас</router-link>
+                </el-menu-item>
+            </el-menu>
         </el-drawer>
       <div class="menu" v-if="!ismobile">
         <el-menu
@@ -96,16 +100,22 @@ onMounted(() => {
         :mode="ismobile?'vertical':'horizontal'"
         @select="handleSelect"
       >
-    <el-menu-item index="1">Главная</el-menu-item>
+    <el-menu-item index="1">
+      <router-link to="/">Главная</router-link>
+    </el-menu-item>
     <el-sub-menu index="2">
-      <template #title>Услуги</template>
+      <template #title>
+        Услуги
+      </template>
       <el-menu-item index="2-1" v-for="item in data.Category">
         <router-link :to="'/services/' + item['_id']">
           {{ item['name']}}
         </router-link>
       </el-menu-item>
     </el-sub-menu>
-    <el-menu-item index="3">О нас</el-menu-item>
+    <el-menu-item index="3">
+      <router-link to="/about_us">О нас</router-link>
+    </el-menu-item>
         </el-menu>
       </div>
       <div class="search">
@@ -155,9 +165,9 @@ onMounted(() => {
     
   }
 }
-.mobile_menu{
+// .mobile_menu{
 
-}
+// }
 .activeMenu{
   right: 0;
 }
