@@ -159,7 +159,7 @@ onMounted(() => {
             </div>
         </div>
     </div>
-    <div class="content-center">
+    <div class="content-center font--banner">
       <div class="container">
         <div class="photo_block block block1" id="aps">
           <div class="str">
@@ -196,66 +196,69 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .container {
-  height: 400px;
+  height: 500px;
   width: 100%;
   
   display: flex;
   flex-flow: column wrap;
   justify-content: flex-end;
-  resize: both;
+  // resize: both;
   overflow: hidden;
+  @media (max-width:450px) {
+    height: auto;
+    flex-flow: column nowrap;
+  }
 }
 
 .block {
   box-sizing: border-box;
-  // background: #48f;
   margin: 5px;
-  // padding: 10px;
-  // font-size: 30px;
-  // color: #fff;
   transition: all 0.4s ease-in-out 0s;
   @media (max-width:450px) {
     // padding: 3px;
+    width: 100% !important;
+    margin: 2px !important;
+    height: 140px !important;
   }
   &:hover, &:focus{
     transition: all 0.4s ease-in-out 0s;
-    background-position: bottom center !important;
+    background-position: bottom 4px center !important;
   }
 }
 
 .block1 {
   width: calc(50% - 10px);
   height: calc(100% - 10px);
-  @media (max-width:450px) {
-    width: calc(40% - 10px);
-    // margin: 0;
-  }
+  // @media (max-width:450px) {
+  //   width: calc(40% - 10px);
+  //   // margin: 0;
+  // }
 }
 
 .block2 {
   width: calc(50% - 10px);
   height: calc(50% - 10px);
-  @media (max-width:450px) {
-    width: calc(60% - 10px);
-    // margin: 0;
-  }
+  // @media (max-width:450px) {
+  //   width: calc(60% - 10px);
+  //   // margin: 0;
+  // }
 }
 
 .block3,
 .block4 {
   width: calc(25% - 10px);
   height: calc(50% - 10px);
-  @media (max-width:450px) {
-    width: calc(30% - 10px);
-    // margin: 0;
-  }
+  // @media (max-width:450px) {
+  //   width: calc(30% - 10px);
+  //   // margin: 0;
+  // }
 }
 
 .block4 {
   margin-left: calc(-25% + 5px);
-  @media (max-width:450px) {
-    margin-left: calc(-30% + 5px);
-  }
+  // @media (max-width:450px) {
+  //   margin-left: calc(-30% + 5px);
+  // }
 }
 .str{      
   // text-indent: 20px;
@@ -272,7 +275,7 @@ onMounted(() => {
   justify-content: center;
   border-radius: 4px;
   padding: 10px 30px;
-  font-size: 15px;
+  // font-size: 15px;
   transition: all 0.4s ease-in-out 0s;
   opacity: 0.6;
   &:hover{
@@ -283,7 +286,7 @@ onMounted(() => {
     
   }
   @media (max-width:450px) {
-    font-size: 10px;
+    // font-size: 10px;
     padding: 5px;
   }
 }
@@ -312,7 +315,7 @@ onMounted(() => {
 }
 
 .homePage{
-overflow-y:auto;
+// overflow-y:auto;
 height: 100%;
 padding: 10px 0;
 }

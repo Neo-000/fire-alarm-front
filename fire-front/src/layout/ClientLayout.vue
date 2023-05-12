@@ -14,6 +14,7 @@ import { RouterLink, RouterView } from 'vue-router';
     </div>
     <div class="content_layout">
       <router-view></router-view>
+      <!-- <ClientFooter></ClientFooter> -->
     </div>
     <div class="footer_layout">
       <ClientFooter></ClientFooter>
@@ -44,12 +45,14 @@ import { RouterLink, RouterView } from 'vue-router';
     width: 100%;
     flex: 1 0 auto;
     z-index: 50;
+    margin-bottom: 2px;
   }
   .footer_layout{
+    height: 60px;
     position: relative;
-    background: grey;
+    background: rgb(228, 228, 228);
     width: 100%;
-    flex: 0 0 auto;
+    /* flex: 0 0 auto; */
     z-index: 60;
   }
 </style>

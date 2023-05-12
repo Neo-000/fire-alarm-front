@@ -5,8 +5,12 @@ $maxWidth: 1920;
 	font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth}));
 }
 
+.font--footer{@include adaptiv-font(7,13)}
 .font--mini{@include adaptiv-font(12,15)}
 .font--maxi{@include adaptiv-font(17,30)}
 .font--normal{@include adaptiv-font(14,24)}
 .font--h1{@include adaptiv-font(16,26)}
 .font--h2{@include adaptiv-font(15,25)}
+
+.font--banner{@include adaptiv-font(8,20)}
+
