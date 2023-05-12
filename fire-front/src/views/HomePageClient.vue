@@ -80,8 +80,10 @@ const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
 }
+// const loading =ref(true);
 
 onMounted(() => {
+  // loading.value=false;
   const sizeX = document.documentElement.clientWidth;
   if(sizeX <= 450){
     ismobile.value = true

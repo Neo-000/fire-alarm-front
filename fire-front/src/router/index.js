@@ -11,14 +11,29 @@ const routes = [
                 name:'Home',
                 path:'home',
                 component: () => import('@/views/HomePageClient')
-            }
+            },
+            {
+                name:'About',
+                path:'about_us',
+                component: () => import('@/views/AboutUsPageClient')
+            },
+            {
+                name:'404',
+                path:'404',
+                component: () => import('@/views/ErrorPage')
+            },
         ]
     },
     {
         name:'admin',
         path:'/admin',
         component: () => import('@/layout/AdminLayout')
-    }
+    },
+
+
+
+
+    {path: '/:pathMatch(.*)*', redirect:'/404'}
 
 ]
 

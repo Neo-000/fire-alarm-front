@@ -1,13 +1,18 @@
 <script setup>
+import { ref, onMounted} from 'vue';
 import ClientHeader from '@/components/ClientHeader.vue';
 import ClientFooter from '@/components/ClientFooter.vue';
 import MenuClientHeader from '../components/MenuClientHeader.vue';
 import { RouterLink, RouterView } from 'vue-router';
 
+const loading =ref(true);
+onMounted(() => {
+  loading.value = false
+})
 </script>
 
 <template>
-  <div class="app_layout">
+  <div class="app_layout"  v-loading="loading">
     <div class="header_layout">
       <ClientHeader></ClientHeader>
       <MenuClientHeader></MenuClientHeader>
@@ -24,6 +29,9 @@ import { RouterLink, RouterView } from 'vue-router';
 </template>
 
 <style scoped>
+/* .example-showcase .el-loading-mask {
+  z-index: 9;
+} */
   .app_layout{
     display: flex;
     flex-direction: column;
