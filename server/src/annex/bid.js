@@ -1,8 +1,8 @@
 import { services } from "../models/ServicesModel.js";
 import mongoose from "mongoose";
 import { bid } from "../models/BidModel.js";
-import { DbConnect } from "./dbinit.js";
-const db = new DbConnect();
+// import { DbConnect } from "./dbinit.js";
+// const db = new DbConnect();
 
 class Bid{
     async Create(req,res){
@@ -25,7 +25,7 @@ class Bid{
             })
             console.log(NewBid)
             console.log(data)
-            await db.on();
+            // await db.on();
             await NewBid.save().then(
                 (result) => {
                     res
@@ -36,7 +36,7 @@ class Bid{
                 err => {console.log(err)}
               );
     
-            await db.off();
+            // await db.off();
         }else {
             res
             .status(400)
@@ -44,7 +44,7 @@ class Bid{
         }
     }
     async GetAll(req,res){
-        await db.on();
+        // await db.on();
         const all_bid = await bid.find({});
         if(all_bid != undefined & all_bid != '' & all_bid.length != ''){
             res
@@ -58,12 +58,12 @@ class Bid{
             .status(200)
             .send('Заявок пока что нет')
         }
-        return await db.off();
+        // return await db.off();
     }
     async Delete(req,res){
         const data = req.body;
         if(Object.keys(data).length){
-            await db.on();
+            // await db.on();
             await bid.deleteOne({_id:data._id}).then(
                 (result) => {
                     res
@@ -77,7 +77,7 @@ class Bid{
                     .send(err)
                 }
             )
-            return await db.off();
+            // return await db.off();
         }
         else{
             res
@@ -86,7 +86,7 @@ class Bid{
         }
     }
     async DeleteAll(req,res){
-            await db.on();
+            // await db.on();
             await bid.deleteMany({}).then(
                 (result) => {
                     res
@@ -100,7 +100,7 @@ class Bid{
                     .send('заявок нет')
                 }
             )
-            return await db.off();
+            // return await db.off();
         }
     }
 

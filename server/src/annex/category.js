@@ -1,9 +1,9 @@
 import { services } from "../models/ServicesModel.js";
 import mongoose from "mongoose";
 import { category } from "../models/CategoryModel.js";
-import { DbConnect } from "./dbinit.js";
+// import { DbConnect } from "./dbinit.js";
 
-const db = new DbConnect();
+// const db = new DbConnect();
 class Category{
 
   async Create(req,res){
@@ -12,7 +12,7 @@ class Category{
             _id: new mongoose.Types.ObjectId(),
             name:req.body.name
           })
-          await db.on();
+          // await db.on();
           await NewCategory.save().then(
             (result) => {
                 res
@@ -23,7 +23,7 @@ class Category{
             err => {console.err('неуспешно class Category.Create()', req.body, ' err = ', err)}
           );
 
-          await db.off();
+          // await db.off();
         }else {
             res
             .status(400)
@@ -34,7 +34,7 @@ class Category{
 
   async Update(req,res){
         if(Object.keys(req.body).length){
-          await db.on();
+          // await db.on();
           const elem = await category.find({_id:req.body._id});
           if(req.body.name != '' & req.body.name != undefined & req.body.name != null){
             await category.updateOne({_id:req.body._id},{
@@ -54,7 +54,7 @@ class Category{
             .send('имя не было неизменено')
           }
 
-          return await db.off();
+          // return await db.off();
         }else {
           res
           .status(400)
@@ -65,7 +65,7 @@ class Category{
 
   async Delete(req,res){
     if(Object.keys(req.body).length){
-      await db.on();
+      // await db.on();
       const elem =  await category.find({_id:req.body._id});
       const ElemServices = elem[0].services;
       const LengthServices = ElemServices.length
@@ -89,7 +89,7 @@ class Category{
         err => {console.log(err)}
       )
 
-      return await db.off();
+      // return await db.off();
     }
     else {
           res
@@ -100,7 +100,7 @@ class Category{
   }
   async GetNameCategory(req,res){
     if(Object.keys(req.body).length){
-         await db.on();
+        //  await db.on();
          const getcategory = await category.find({_id:req.body._id});
          const name = getcategory[0].name;
          if(name != undefined & name != null & name != ''){
@@ -113,7 +113,7 @@ class Category{
           .send('nu naher')
          }
 
-         await db.off();
+        //  await db.off();
     } else {
           res
           .status(400)
@@ -123,7 +123,7 @@ class Category{
   }
   async GetServicesCategory(req,res){
     if(Object.keys(req.body).length){
-         await db.on();
+        //  await db.on();
          const getcategory = await category.find({_id:req.body._id});
          const Category_services = getcategory[0].services;
          if(Category_services != undefined & Category_services != null){
@@ -149,7 +149,7 @@ class Category{
           .send('services')
          }
 
-         await db.off();
+        //  await db.off();
     } else {
           res
           .status(400)
@@ -158,7 +158,7 @@ class Category{
       }
   }
   async GetAll(req,res){
-         await db.on();
+        //  await db.on();
          const allCategory = await category.find({});
          if(allCategory != '' & allCategory != undefined & allCategory != null){
           res
@@ -171,7 +171,7 @@ class Category{
           res.status(404).send({msg:'Еще нет ни одной категории'})
          }
 
-         return await db.off();
+        //  return await db.off();
       }
   }
 
