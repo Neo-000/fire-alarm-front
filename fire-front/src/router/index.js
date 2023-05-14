@@ -18,6 +18,10 @@ const routes = [
                 component: () => import('@/views/AboutUsPageClient')
             },
             {
+                path:'services/:id',
+                component: () => import('../views/Services')
+            },
+            {
                 name:'404',
                 path:'404',
                 component: () => import('@/views/ErrorPage')

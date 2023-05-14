@@ -60,11 +60,11 @@ onMounted(() => {
 
 <template>
     <div class="wrapper">
-        <el-drawer v-model="visible" :show-close="false" size="90%">
+        <el-drawer v-model="visible" :show-close="false" size="90%" v-if="ismobile">
           <template #header="{ close, titleId, titleClass }">
             <h4 :id="titleId" :class="titleClass">Меню</h4>
             <el-button type="danger" @click="close">
-              <el-icon><CircleCloseFilled /></el-icon>
+              <el-icon><CircleCloseFilled /></el-icon>s
             </el-button>
           </template>
               <el-menu
@@ -81,12 +81,13 @@ onMounted(() => {
                 <el-sub-menu index="2">
                   <template #title>Услуги</template>
                   <el-menu-item index="2-1" v-for="item in data.Category" @click="visible=false">
-                    <router-link :to="'/services/' + item['_id']">
+                    <router-link :to = "`/services/${item['_id']}`" :key="item['_id']  ">
                       {{ item['name']}}
                     </router-link>
                   </el-menu-item>
                 </el-sub-menu>
-                <el-menu-item index="3" @click="visible=false">
+                <el-menu-item index="3"  @click="visible=false">
+                  <!-- о нас -->
                   <router-link to="/about_us">О нас</router-link>
                 </el-menu-item>
             </el-menu>
@@ -108,7 +109,7 @@ onMounted(() => {
         Услуги
       </template>
       <el-menu-item index="2-1" v-for="item in data.Category">
-        <router-link :to="'/services/' + item['_id']">
+        <router-link :to = "`/services/${item['_id']}`">
           {{ item['name']}}
         </router-link>
       </el-menu-item>

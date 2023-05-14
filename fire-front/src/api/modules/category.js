@@ -10,6 +10,38 @@ const Category = {
           return [error, null];
         }
       },
+    async Name(id) {
+        try {
+          const result = await API.post(category.name,id);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      },
+    async GetServices(id) {
+        try {
+          const result = await API.post(category.get_services,id);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      },
+    async Delete(id) {
+        try {
+          const result = await API.post(category.delete,id);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      },
+    async Name(id) {
+        try {
+          const result = await API.post(category.name,id);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      },
     async Getall() {
         try {
           const result = await API.get(category.all);

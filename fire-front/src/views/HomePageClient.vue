@@ -2,9 +2,10 @@
 import { ref, reactive, onMounted} from 'vue';
 import { ElMessageBox, ElMessage  } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import {Location, PhoneFilled, Paperclip} from '@element-plus/icons-vue';
+// import {Location, PhoneFilled, Paperclip} from '@element-plus/icons-vue';
 import {Bid} from '../api/modules/bid.js'
 import {MAIN_INF} from '../config';
+import HomePagePhotoBlock from '../components/HomePagePhotoBlock.vue';
 
 const info = ref({
     phone:MAIN_INF.phone,
@@ -129,7 +130,7 @@ onMounted(() => {
                                 :rules="[
                                 { required: true, message: 'Заполните', trigger: 'blur' },
                                 { min: 2, max: 10, message: 'Введите корректную фамилию', trigger: 'change' }
-                            ]"
+                                ]"
                                 >
                                     <el-input v-model="numberValidateForm.surname" 
                                     show-word-limit
@@ -161,160 +162,12 @@ onMounted(() => {
             </div>
         </div>
     </div>
-    <div class="content-center font--banner">
-      <div class="container">
-        <div class="photo_block block block1" id="aps">
-          <div class="str">
-            <span>
-              <el-icon color="red"><Paperclip /></el-icon>
-              Мы предлагаем профессиональный монтаж автоматизированных пожарных систем, основанный на индивидуальном подходе к каждому клиенту, учете его особенностей и желаний.
-            </span></div>
-        </div>
-        <div class="photo_block block block2" id="aupt">
-          <div class="str">
-            <span>
-              <el-icon color="red"><Paperclip /></el-icon>
-              Наша компания выберет тип пожарной системы, подходящий для вашего помещения и установит его строго в соответствии с государственными и международными стандартами и нормами.
-            </span></div>
-        </div>
-        <div class="photo_block block block3" id="slabo">
-          <div class="str">
-            <span>
-              <el-icon color="red"><Paperclip /></el-icon>
-              Монтаж слаботочных систем – это важный этап при обустройстве помещений любого назначения
-            </span></div>
-        </div>
-        <div class="photo_block block block4" id="video">
-          <div class="str">
-            <span>
-              <el-icon color="red"><Paperclip /></el-icon>
-              Мы установим современные камеры видеонаблюдения с разрешением от Full HD до 4K
-            </span></div>
-        </div>
-      </div>
-    </div>
+    <HomePagePhotoBlock />
 </div>
 </template>
 
 <style scoped lang="scss">
-.container {
-  height: 500px;
-  width: 100%;
-  
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: flex-end;
-  // resize: both;
-  overflow: hidden;
-  @media (max-width:450px) {
-    height: auto;
-    flex-flow: column nowrap;
-  }
-}
 
-.block {
-  box-sizing: border-box;
-  margin: 5px;
-  transition: all 0.4s ease-in-out 0s;
-  @media (max-width:450px) {
-    // padding: 3px;
-    width: 100% !important;
-    margin: 2px !important;
-    height: 140px !important;
-  }
-  &:hover, &:focus{
-    transition: all 0.4s ease-in-out 0s;
-    background-position: bottom 4px center !important;
-  }
-}
-
-.block1 {
-  width: calc(50% - 10px);
-  height: calc(100% - 10px);
-  // @media (max-width:450px) {
-  //   width: calc(40% - 10px);
-  //   // margin: 0;
-  // }
-}
-
-.block2 {
-  width: calc(50% - 10px);
-  height: calc(50% - 10px);
-  // @media (max-width:450px) {
-  //   width: calc(60% - 10px);
-  //   // margin: 0;
-  // }
-}
-
-.block3,
-.block4 {
-  width: calc(25% - 10px);
-  height: calc(50% - 10px);
-  // @media (max-width:450px) {
-  //   width: calc(30% - 10px);
-  //   // margin: 0;
-  // }
-}
-
-.block4 {
-  margin-left: calc(-25% + 5px);
-  // @media (max-width:450px) {
-  //   margin-left: calc(-30% + 5px);
-  // }
-}
-.str{      
-  // text-indent: 20px;
-  text-align: left;
-  // word-spacing:-2px;
-  // text-justify: distribute;
-  color: rgba(255, 255, 255, 0.89);
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.733);
-  backdrop-filter: blur(3px);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  border-radius: 4px;
-  padding: 10px 30px;
-  // font-size: 15px;
-  transition: all 0.4s ease-in-out 0s;
-  opacity: 0.6;
-  &:hover{
-    opacity: 1;
-    transition: all 0.4s ease-in-out 0s;
-    backdrop-filter: blur(1px);
-    background: rgba(0, 0, 0, 0.822);
-    
-  }
-  @media (max-width:450px) {
-    // font-size: 10px;
-    padding: 5px;
-  }
-}
-.photo_block{
-  border-radius: 4px;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
-}
-
-#aps{
-    background: url('../assets/img/aps_montaj.jpeg');
-  }
-  #aupt{
-    background: url('../assets/img/aypt_montage.webp');
-  }
-  #slabo{
-    background: url('../assets/img/slabo_montaje.jpg');
-  }
-  #video{
-    background: url('../assets/img/video_montaje.jpg');
-  }
-
-.content-center{
-  width: 100%;
-}
 
 .homePage{
 // overflow-y:auto;
@@ -351,15 +204,24 @@ padding: 10px 0;
             align-items: flex-start;
             justify-content: center;
             &-title{
-                color: rgb(50, 50, 50);
+                color: rgba(9, 8, 8, 0.903);
                 padding: 20px;
             }
             form{
                 max-width: 450px;
                 padding: 10px;
                 border-radius: 4px;
-                background: rgba(255, 255, 255, 0.915);
+                background: rgba(255, 255, 255, 0.959);
+                background: url('../assets/img/bckg8.png');
                 backdrop-filter: blur(10px);
+                transition: all 0.4s linear 0s;
+                // box-shadow:;
+                &:hover{
+                  transition: all 0.2s ease 0s;
+                  // background: white;
+                  box-shadow: 0 0 20px rgba(255, 255, 255, 0.201);
+                  color: black;
+                }
             }
             @media (max-width:450px) {
             max-width: 100%;
@@ -375,7 +237,7 @@ padding: 10px 0;
             text-align: center;
             flex-wrap: wrap;
             word-spacing: 10px;
-            font-weight: 900;
+            // font-weight: 900;
             color: rgba(255, 255, 255, 0.842);
             // font-size: 2.1vw;
             padding: 50px;
@@ -432,5 +294,9 @@ padding: 10px 0;
 @keyframes banner_title {
   from{opacity:0; width: 10px; font-size: 2px;}
   to{opacity: 1; width: 50%;}
+}
+
+:deep(.el-form-item__label){
+  color: black;
 }
 </style>
