@@ -5,22 +5,16 @@ import {Category}  from '../api/modules/category.js';
 import{Services} from '../api/modules/services.js';
 import {DArrowLeft, DArrowRight} from '@element-plus/icons-vue';
 const route = useRoute();
-const id = ref();
-const ListItem = ref();
-const configPagination = ref({
-    NumberOfPage:0,
-    min:0,
-    max:5
+const new_data = ref({
+    _id:'',
+    _name:'',
+    _items:[],
+    _data:[]
 })
+let data= reactive({});
+data = new_data;
 
 
-
-const data = ref({
-    category_name:'',
-    services:[],
-    services_value:[],
-    item:Number
-})
 
 async function GetCategoryName () {
     const [err, res] = await Category.Name({'_id':id.value});
@@ -35,14 +29,14 @@ async function GetServicesById (id) {
     return res
 }
 
+
+
+
 const fetchViewServices = async () =>{
-    const items = data.value.item
-    for (let i = 0; i < items; i++) {
-        let views = GetServicesById(data.value.services[i]);
+    for (let i = 0; i < 10; i++) {
+        let views = GetServicesById(id);
         const services =  views.then(
         res =>{
-          data.value.services_value[i] = res.data;
-          return res
         },
         err => {return err}
       );
@@ -52,8 +46,6 @@ const fetcnCategories = async () =>{
   let name = GetCategoryName();
   const category_name =  name.then(
         res =>{
-          data.value.category_name = res.data
-          return res
         },
         err => {return err}
       );
@@ -62,27 +54,13 @@ const fetchServices = async () =>{
   let services = GetServicesId();
   const services_id =  services.then(
         res =>{
-            console.log(res)
-        if(res != null && res != '' && res != undefined){
-            data.value.services = res.data.services;
-            data.value.item = res.data.item;
-            if(data.value.services != undefined && data.value.services != null){
-                fetchViewServices()
-            }
-        }else {
-            data.value.services = null;
-            data.value.item = 0;
-            data.value.services_value = [];
-        }
-          return res
         },
         err => {return err}
       );
 }
 
 const fetchall = async () => {
-    await fetcnCategories();
-    await fetchServices();
+    console.log('fetchall')
 }
 
 
@@ -92,49 +70,44 @@ const fetchall = async () => {
 
 
 
-onBeforeMount( async () => {
-    await fetchall()
+onMounted( async () => {
+    // await fetchall()
 })
 
 watchEffect( async () => {
-id.value = route.params.id;
-    await fetchall()
+new_data.value._id = route.params.id;
+console.log(data)
+console.log(new_data)
+await fetchall()
 }
 )
+
+
 </script>
 
 <template>
     <div class="services wrapper">
         <div class="left_sidebar">
-            <p>ListItem : {{ ListItem }}</p>
-            <p>svsdfsd</p>
+
         </div>
         <div class="services_view">
-            <div class="services_view-title font--h1">{{data.category_name }}</div>
+            <div class="services_view-title font--h1"></div>
             <div class="services_view-content">
 
-                <div class="services_view-content-block err" v-if="data.services == null">
+                <div class="services_view-content-block err">
                     <!-- <p>В этой категории пока что нет услуг</p> -->
                     <div class="err-img"></div>
                 </div>
-                <div class="services_view-content-block" v-if="data.services != null">
-                <div class="product_card" v-for="item in data.services_value.slice(configPagination.min,configPagination.max)">
-                    <p class="product_card-name">{{ item.name}}</p>
-                    <p class="product_card-price" 
-                    v-if="item.price != null && item.price != undefined && item.price !=''"
-                    >
-                        {{ item.price }} руб
-                    </p>
-                    <p class="product_card-price" 
-                    v-if="item.price == null || item.price == undefined || item.price ==''"
-                    >
-                        Узнать подробнее
-                    </p>
-                </div>
-                <div class="pagination">
-                    <div class="pagination_btn"><el-icon><DArrowLeft /></el-icon> Назад</div>
-                    <div class="pagination_btn">Далее <el-icon><DArrowRight /></el-icon></div>
-                </div>
+                <div class="services_view-content-block" >
+                    <div class="product_card" >
+                        <p class="product_card-name"></p>
+                        <p class="product_card-price">
+                        руб
+                        </p>
+                        <p class="product_card-price none-select">
+                            Узнать подробнее
+                        </p>
+                    </div>
             </div>
             </div>
         </div>
@@ -142,6 +115,33 @@ id.value = route.params.id;
 </template>
 
 <style scoped lang="scss">
+.pagination{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 20px;
+    &_items{
+        padding: 10px;
+    }
+    &_btn{
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        font-size: 12px;
+        // margin: 0 5px;
+        border-radius: 3px;
+        // border: 1px solid rgb(179, 173, 173);
+        color: #f5f5f5;
+        background: #E74C3C;
+        &:hover{
+            transition: all 0.3s ease 0s;
+            background: #a03225;
+        }
+    }
+}
 .product_card{
     display: flex;
     justify-content: space-between;
@@ -168,6 +168,8 @@ id.value = route.params.id;
         }
     }
     &-price{
+        user-select: none;
+        cursor: pointer;
         padding: 5px 10px;
         border-radius: 4px;
         border: 1px solid #E74C3C;
@@ -178,6 +180,10 @@ id.value = route.params.id;
         font-weight: 600;
         color: white;
         width: 30%;
+        &:hover{
+            transition: all 0.3s ease 0s;
+            background: #a03225;
+        }
         @media (max-width:450px) {
             width: 100%;
         }
