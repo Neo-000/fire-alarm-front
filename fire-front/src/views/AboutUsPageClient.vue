@@ -34,7 +34,10 @@
 
 <style scoped lang="scss">
 .AboutUs{
-  padding: 10px;
+  // padding: 10px;
+  @media (max-width:450px) {
+    padding: 20px;
+  }
   &_title{
 
   }

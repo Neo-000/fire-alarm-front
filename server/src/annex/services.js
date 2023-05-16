@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { services } from "../models/ServicesModel.js";
 import { category } from "../models/CategoryModel.js";
-import { DbConnect } from "./dbinit.js";
+// import { DbConnect } from "./dbinit.js";
 
-const db = new DbConnect();
+// const db = new DbConnect();
 class Services{
 
     async Create(req,res){
@@ -14,7 +14,7 @@ class Services{
             name:req.body.name,
             price:req.body.price
           })
-          await db.on();
+          // await db.on();
           await NewServices.save().then(
             (result) => {
                 res
@@ -29,7 +29,7 @@ class Services{
                 (result) => {console.log(result)},
                 err => {console.log(err)}
             )
-          return await db.off();
+          // return await db.off();
         }else {
             res
             .status(400)
@@ -39,7 +39,7 @@ class Services{
     }
     async Update(req,res){
       if(Object.keys(req.body).length){
-        await db.on();
+        // await db.on();
         let updateServices = await services.find({_id:req.body._id});
         let nameOld = updateServices[0].name,
             priceOld = updateServices[0].price;
@@ -62,7 +62,7 @@ class Services{
           (result) => {console.log('update services')},
           err => {console.log(err)}
         )
-        await db.off();
+        // await db.off();
         return res.status(200).send('ok')
         
       }else{
@@ -74,7 +74,7 @@ class Services{
     }
     async UdateNameCategory(req,res){
       if(Object.keys(req.body).length){
-        await db.on();
+        // await db.on();
         const id = req.body._id,
               NewIdCategory = req.body.category_id,
               CurrentServices = await services
@@ -126,7 +126,7 @@ class Services{
         }else{
           return res.status(404).send('ошибка при обработке')
         }
-        return await db.off(); 
+        // return await db.off(); 
       }else{
             res
             .status(400)
@@ -137,7 +137,7 @@ class Services{
     async Delete(req,res){
       if(Object.keys(req.body).length){
         const id = req.body._id;
-        await db.on();
+        // await db.on();
         const CurrentService = await services.findOne({_id:id})
         const category_id = CurrentService.category_id;
         await category.updateOne({_id:category_id}, {$pull :{services:id}}).then(
@@ -148,7 +148,7 @@ class Services{
           (result) => {res.status(200).send('услуга удалена')},
           err => (res.status(404).send('не нашлось такой услуги'))
         )
-        return await db.off();
+        // return await db.off();
         
       }else{
             res
@@ -159,17 +159,17 @@ class Services{
     }
     async GetAll(req,res){
       if(Object.keys(req.body).length){
-        await db.on()
+        // await db.on()
         const allServices = await services.find({}).then(
           (r) => {
             res.status(200).send({
-              items:allServices.length,
-              allServices:allServices
+              items:r.length,
+              allServices:r
             })
           },
           err => {res.status(404).send('не добавлено ни одной услуги')}
         )
-      return await db.off();
+      // return await db.off();
       } else {
         res
         .status(400)
@@ -177,10 +177,14 @@ class Services{
         return console.log('данных нету бля', req.body)
       }
     }
-    async GetFilrPriceMore(req,res){
+    async GetServicesById(req,res){
       if(Object.keys(req.body).length){
-        const minPrice = req.body.min
-
+        const servives = await services.findOne({_id:req.body._id}).then(
+          (r) => {
+            res.status(200).send(r)
+          },
+          err => {res.status(404).send('нет одной услуги')}
+        )
       } else {
         res
         .status(400)
@@ -188,6 +192,17 @@ class Services{
         return console.log('данных нету бля', req.body)
       }
     }
+    // async GetFilrPriceMore(req,res){
+    //   if(Object.keys(req.body).length){
+    //     const minPrice = req.body.min
+
+    //   } else {
+    //     res
+    //     .status(400)
+    //     .send('idi nahyi')
+    //     return console.log('данных нету бля', req.body)
+    //   }
+    // }
 }
 
 export {Services}

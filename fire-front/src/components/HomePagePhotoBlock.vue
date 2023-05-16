@@ -1,5 +1,6 @@
 <script setup>
 
+import {Location, PhoneFilled, Paperclip} from '@element-plus/icons-vue';
 
 </script>
 

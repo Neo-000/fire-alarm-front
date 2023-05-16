@@ -172,7 +172,8 @@ onMounted(() => {
 .homePage{
 // overflow-y:auto;
 height: 100%;
-padding: 10px 0;
+// padding: 10px 0;
+padding-bottom: 160px;
 }
 .bannerHome{
     width: 100%;

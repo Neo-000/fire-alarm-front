@@ -3,8 +3,11 @@ import { ref, onMounted} from 'vue';
 import ClientHeader from '@/components/ClientHeader.vue';
 import ClientFooter from '@/components/ClientFooter.vue';
 import MenuClientHeader from '../components/MenuClientHeader.vue';
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink, RouterView, useRoute} from 'vue-router';
+const route = useRoute();
 
+const props = defineProps({
+})
 const loading =ref(true);
 onMounted(() => {
   loading.value = false
@@ -21,7 +24,7 @@ onMounted(() => {
       <router-view></router-view>
       <!-- <ClientFooter></ClientFooter> -->
     </div>
-    <div class="footer_layout">
+    <div class="footer_layout" >
       <ClientFooter></ClientFooter>
     </div>
 
