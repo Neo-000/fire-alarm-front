@@ -22,7 +22,8 @@ const api_router ={
         update_category:MainAPI.services + 'update/category',
         delete:MainAPI.services + 'delete',
         all:MainAPI.services + 'getall',
-        getById:MainAPI.services + 'get_by_id'
+        getById:MainAPI.services + 'get_by_id',
+        getByCategoryId:MainAPI.services + 'get_by_category_id'
     },
     bid:{
         create:MainAPI.bid + 'create',

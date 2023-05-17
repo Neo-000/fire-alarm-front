@@ -41,7 +41,7 @@ window.addEventListener('resize' , () => {
 })
 const activeIndex = ref('1')
 const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
 
 const seach =ref()

@@ -10,6 +10,14 @@ const Services = {
         } catch (error) {
           return [error, null];
         }
+      },
+    async GetByCategoryId(id) {
+        try {
+          const result = await API.post(services.getByCategoryId,id);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
       }
 }
 export {Services}
