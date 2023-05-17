@@ -21,7 +21,6 @@ const Category = {
     async GetServices(id) {
         try {
           const result = await API.post(category.get_services,id);
-          // console.log(result)
           return [null, result];
         } catch (error) {
           return [error, null];
@@ -30,15 +29,6 @@ const Category = {
     async Delete(id) {
         try {
           const result = await API.post(category.delete,id);
-          return [null, result];
-        } catch (error) {
-          return [error, null];
-        }
-      },
-    async Name(id) {
-      // console.log(id)
-        try {
-          const result = await API.post(category.name,id);
           return [null, result];
         } catch (error) {
           return [error, null];

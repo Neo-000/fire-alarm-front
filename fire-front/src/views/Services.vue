@@ -3,81 +3,123 @@ import { ref , computed , reactive, onMounted, onBeforeUpdate, onBeforeMount, wa
 import { useRoute } from 'vue-router';
 import {Category}  from '../api/modules/category.js';
 import{Services} from '../api/modules/services.js';
-import {DArrowLeft, DArrowRight} from '@element-plus/icons-vue';
+import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue';
+import { ElMessageBox, ElMessage  } from 'element-plus';
 const route = useRoute();
 const new_data = ref({
     _id:'',
     _name:'',
-    _items:[],
-    _data:[]
+    _items:'',
+    _data:[],
+    _views:[],
+    _services:''
 })
 let data= reactive({});
-data = new_data;
+data = new_data.value;
 
 
-
-async function GetCategoryName () {
-    const [err, res] = await Category.Name({'_id':id.value});
-    return res
-}
-async function GetServicesId () {
-    const [err, res] = await Category.GetServices({'_id':id.value});
-    return res
-}
-async function GetServicesById (id) {
-    const [err, res] = await Services.GetById({'_id':id});
-    return res
-}
-
-
-
-
-const fetchViewServices = async () =>{
-    for (let i = 0; i < 10; i++) {
-        let views = GetServicesById(id);
-        const services =  views.then(
-        res =>{
-        },
-        err => {return err}
-      );
+const ApiCategoryname = async () => {
+        const [err, res] = await Category.Name({'_id':data._id})
+        if(err == null){
+            data._name = res.data
+            return true
+        } else return false
+};
+const GetServicesId = async () => {
+    const [err, res] = await Category.GetServices({'_id':data._id});
+    if(err == null){
+        data._items = res.data.item;
+        data._data = res.data.services;
+        const views = GetServicesByCategoryId();
+        data._services = true;
+        return true
+    } else{
+        data._items = 0;
+        data._data = [];
+        data._views = [];
+        data._services = false;
+        ElMessage({
+        message: err.response.data.msg,
+        type: 'warning',
+        })
     }
-}
-const fetcnCategories = async () =>{
-  let name = GetCategoryName();
-  const category_name =  name.then(
-        res =>{
-        },
-        err => {return err}
-      );
-}
-const fetchServices = async () =>{
-  let services = GetServicesId();
-  const services_id =  services.then(
-        res =>{
-        },
-        err => {return err}
-      );
-}
-
+};
+const GetServicesByCategoryId = async () => {
+    const [err, res] = await Services.GetByCategoryId({'category_id':data._id});
+    if(err == null){
+            data._views = res.data
+            return true
+        } else return false
+};
 const fetchall = async () => {
-    console.log('fetchall')
+    console.log('fatchall start')
+    const name = ApiCategoryname();
+    const services = GetServicesId();
+    const pg = setPagination();
+};
+
+const step = 5;
+const configPagination = ref({
+    allItems:'',
+    pages:'',
+    active_page:'1',
+    min:0,
+    max:step
+});
+let pagination = reactive({});
+pagination = configPagination.value;
+const setPagination = async () =>{
+    console.log(data._items)
+    pagination.allItems = data._items;
+    pagination.pages = Math.ceil(data._items/step);
 }
+const paginationMore = () => {
+    if(pagination.active_page < pagination.pages) {
+       pagination.active_page++
+    }else {
+        pagination.active_page = pagination.pages;
+    }
+    if(pagination.min < (pagination.allItems - (step + 1)) && pagination.max < pagination.allItems ){
+        if(pagination.min == 0){
+            pagination.min = pagination.min + (step -1);
+            pagination.max = pagination.max + (step -1);
+        }else {
+            pagination.min = pagination.min + step;
+            pagination.max = pagination.max + step;
+        }
+    } else {
+        pagination.min = pagination.allItems - (step + 1);
+        pagination.max = pagination.allItems;
+    }
+    
+}
+const paginationBack = () => {
+    console.log('0')
+    if(pagination.active_page > 1) {
+       pagination.active_page--
+    }else {
+        pagination.active_page = 1;
+    }
+    if(pagination.min > 0){
+        if(pagination.min <= (step - 1)){
+            pagination.min = 0;
+            pagination.max = step;
+        }else {
+            pagination.min = pagination.min - step;
+            pagination.max = pagination.max - step;
+        }
+    } else {
+        pagination.min = 0;
+        pagination.max = atep;
+    }
 
-
-
-
-
-
-
+}
 
 onMounted( async () => {
-    // await fetchall()
 })
 
 watchEffect( async () => {
-new_data.value._id = route.params.id;
-console.log(data)
-console.log(new_data)
+data._id = route.params.id;
 await fetchall()
 }
 )
@@ -88,25 +130,64 @@ await fetchall()
 <template>
     <div class="services wrapper">
         <div class="left_sidebar">
-
         </div>
         <div class="services_view">
-            <div class="services_view-title font--h1"></div>
+            <div class="services_view-title font--h1">
+                {{ data._name }}
+            </div>
             <div class="services_view-content">
 
-                <div class="services_view-content-block err">
+                <div class="services_view-content-block err" v-if="!data._services">
                     <!-- <p>В этой категории пока что нет услуг</p> -->
                     <div class="err-img"></div>
                 </div>
-                <div class="services_view-content-block" >
-                    <div class="product_card" >
-                        <p class="product_card-name"></p>
-                        <p class="product_card-price">
-                        руб
+                <div class="services_view-content-block"  v-if="data._services">
+                    <div class="pagination none-select">
+                        <div 
+                        class="pagination_btn" 
+                        @click="paginationBack"
+                        :class="pagination.active_page == 1?'btn_disabled':''" 
+                        >
+                            <el-icon><ArrowLeft /></el-icon> Назад
+                        </div>
+                        <div class="pagination_items">
+                            {{ pagination.active_page }} из {{ pagination.pages }} стр
+                        </div>
+                        <div
+                        class="pagination_btn"
+                        :class="pagination.active_page == pagination.pages?'btn_disabled':''" 
+                        @click="paginationMore"
+                        >
+                            Далее <el-icon><ArrowRight />
+                        </el-icon></div>
+                    </div>
+                    <div class="product_card" v-for="items in data._views.slice(pagination.min,pagination.max)">
+                        <p class="product_card-name" >{{ items.name }}</p>
+                        <p class="product_card-price" v-if="items.price != 0">
+                        {{items.price}} руб
                         </p>
-                        <p class="product_card-price none-select">
+                        <p class="product_card-price none-select" v-if="items.price == 0">
                             Узнать подробнее
                         </p>
+                    </div>
+                    <div class="pagination none-select">
+                        <div 
+                        class="pagination_btn" 
+                        @click="paginationBack"
+                        :class="pagination.active_page == 1?'btn_disabled':''" 
+                        >
+                            <el-icon><ArrowLeft /></el-icon> Назад
+                        </div>
+                        <div class="pagination_items">
+                            {{ pagination.active_page }} из {{ pagination.pages }} стр
+                        </div>
+                        <div
+                        class="pagination_btn"
+                        :class="pagination.active_page == pagination.pages?'btn_disabled':''" 
+                        @click="paginationMore"
+                        >
+                            Далее <el-icon><ArrowRight />
+                        </el-icon></div>
                     </div>
             </div>
             </div>
@@ -115,12 +196,18 @@ await fetchall()
 </template>
 
 <style scoped lang="scss">
+.btn_disabled{
+        cursor: auto !important;
+        color: #f5f5f5ab !important;
+        background: #e74d3c8e !important;
+        }
 .pagination{
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     width: 100%;
-    margin-top: 20px;
+    margin: 2px;
+    margin-top: 5px;
     &_items{
         padding: 10px;
     }
@@ -143,16 +230,22 @@ await fetchall()
     }
 }
 .product_card{
+    width: 90%;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
-    border: 1px solid rgb(239, 199, 199);
+    align-items: center;
+    padding: 20px 10px;
+    border: 1px solid rgba(239, 199, 199, 0.819);
     border-image-slice: 1;
     border-width: 1px;
     border-left-width: 5px;
-    border-left-color: #E74C3C;
+    border-left-color: #e74d3c86;
     margin: 5px 2px;
     border-radius: 4px;
+    &:hover{
+        transition: all 0.3s linear;
+        background: rgba(255, 165, 165, 0.182);
+    }
     @media (max-width:450px) {
         flex-direction: column;
         width: 45%;
@@ -163,8 +256,10 @@ await fetchall()
         align-items: center;
         // background:grey ;
         width: 40%;
+        text-overflow: ellipsis;
         @media (max-width:450px) {
             width: 100%;
+            // min-width:200px;
         }
     }
     &-price{
@@ -172,20 +267,22 @@ await fetchall()
         cursor: pointer;
         padding: 5px 10px;
         border-radius: 4px;
-        border: 1px solid #E74C3C;
-        background: #E74C3C;
+        border: 1px solid #e74d3c5d;
+        background: #e74d3cc0;
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: 600;
         color: white;
-        width: 30%;
+        width: 40%;
         &:hover{
             transition: all 0.3s ease 0s;
             background: #a03225;
         }
         @media (max-width:450px) {
             width: 100%;
+            font-size: 12px;
+            
         }
 
     }
@@ -201,14 +298,16 @@ await fetchall()
 }
 .services{
     display: flex;
+    align-items: flex-start;
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
 .left_sidebar{
+    padding: 10px;
     width: 30%;
-    background: rgba(194, 194, 194, 0.578);
+    background: rgba(211, 209, 209, 0.292);
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
@@ -238,7 +337,7 @@ await fetchall()
         margin-bottom: 4px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.153);
         width: 100%;
-        color: rgb(152, 44, 44)(146, 38, 38);
+        color: rgb(108, 30, 30);
     }
     &-content{
     overflow-x: hidden;
@@ -246,6 +345,8 @@ await fetchall()
     height: 100%;
 
     &-block{
+        // display: flex;
+        // flex-wrap: wrap;
         @media (max-width:450px) {
             display: flex;
             flex-wrap: wrap;

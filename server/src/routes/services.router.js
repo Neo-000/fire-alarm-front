@@ -22,6 +22,9 @@ router.post('/delete', (req,res) => {
 router.post('/get_by_id', (req,res) => {
     services.GetServicesById(req,res);
 })
+router.post('/get_by_category_id', (req,res) => {
+    services.GetServicesByCategoryId(req,res);
+})
 router.get('/getall', (req,res) => {
     services.GetAll(req,res);
 })

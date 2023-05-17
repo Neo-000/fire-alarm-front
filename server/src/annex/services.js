@@ -192,6 +192,21 @@ class Services{
         return console.log('данных нету бля', req.body)
       }
     }
+    async GetServicesByCategoryId(req,res){
+      if(Object.keys(req.body).length){
+        const servives = await services.find({category_id:req.body.category_id}).then(
+          (r) => {
+            res.status(200).send(r)
+          },
+          err => {res.status(404).send('нет одной услуги')}
+        )
+      } else {
+        res
+        .status(400)
+        .send('idi nahyi')
+        return console.log('данных нету бля', req.body)
+      }
+    }
     // async GetFilrPriceMore(req,res){
     //   if(Object.keys(req.body).length){
     //     const minPrice = req.body.min
