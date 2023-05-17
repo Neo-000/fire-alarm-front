@@ -1,15 +1,18 @@
-<script setup>
+<script setup lang="ts">
 import { ref , computed , reactive, onMounted, onBeforeUpdate, onBeforeMount, watchEffect, toRefs} from 'vue';
 import { useRoute } from 'vue-router';
 import {Category}  from '../api/modules/category.js';
 import{Services} from '../api/modules/services.js';
 import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue';
+import type { FormInstance, FormRules } from 'element-plus';
 import { ElMessageBox, ElMessage  } from 'element-plus';
+import {Bid} from '../api/modules/bid.js';
 const route = useRoute();
 const new_data = ref({
     _id:'',
     _name:'',
     _items:'',
+    _all_category:'',
     _data:[],
     _views:[],
     _services:''
@@ -56,6 +59,7 @@ const fetchall = async () => {
     const name = ApiCategoryname();
     const services = GetServicesId();
     const pg = setPagination();
+    const categ = GetCategory()
 };
 
 const step = 5;
@@ -115,12 +119,114 @@ const paginationBack = () => {
 
 }
 
+
+let ismobile=ref();
+window.addEventListener('resize' , () => {
+  const sizeX = document.documentElement.clientWidth;
+  if(sizeX <= 450){
+    ismobile.value = true
+  } else {
+    ismobile.value = false
+  }
+})
+
+const formSucsess = () => {
+  ElMessage({
+    message: 'Заявка отправлена',
+    type: 'success',
+  })
+}
+const formUnSucsess = () => {
+  ElMessage({
+    message: 'Ошибка сервера',
+    type: 'warning',
+  })
+}
+
+async function ApiBid () {
+    const [err, res] = await Bid.Create(numberValidateForm);
+    return res
+}
+
+const dialogVisible = ref(false)
+
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm('Закрыть окно? Данные не будут сохранены')
+    .then(() => {
+      resetForm(formRef.value)
+      done()
+    })
+    .catch(() => {
+      // catch error
+    })
+}
+const formRef = ref<FormInstance>()
+
+const numberValidateForm = reactive({
+  name:"",
+  firstname: "",
+  surname: "",
+  phone: "",
+  msg:'Новая заявка на сайте'
+
+})
+
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log('submit!')
+      ApiBid()
+      .then(
+        res =>{
+            console.log(res.status)
+            if(res.status >= 200 && res.status < 400){
+                formSucsess();
+            }
+        },
+        err => {formUnSucsess()}
+      );
+    //   console.log(r)
+      dialogVisible.value = false;
+      resetForm(formRef.value);
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
+
+async function GetCategory () {
+    const [err, res] = await Category.Getall();
+    return data._all_category = res.data.msg
+}
+
+
+
+
+
+
+
+
+
 onMounted( async () => {
+    const sizeX = document.documentElement.clientWidth;
+  if(sizeX <= 450){
+    ismobile.value = true
+  } else {
+    ismobile.value = false
+  }
 })
 
 watchEffect( async () => {
 data._id = route.params.id;
 await fetchall()
+console.log(typeof data)
 }
 )
 
@@ -130,6 +236,25 @@ await fetchall()
 <template>
     <div class="services wrapper">
         <div class="left_sidebar">
+            <div class="info">
+                <div class="info_img"></div>
+                <div class="info_title">
+                    Наши специалисты ответят на любой интересующий вопрос по
+услуге
+                </div>
+                <div class="button btn btn-root" @click="dialogVisible = true">Заказать звонок</div>
+            </div>
+            <div class="category">
+                <router-link 
+                class="category_item"
+                :class="item['_id'] == data._id?'active_item':''"
+                v-for="item in data._all_category"
+                :to = "`/services/${item['_id']}`" 
+                :key="item['_id']  ">
+                {{ item.name }}
+                </router-link>
+            </div>
+
         </div>
         <div class="services_view">
             <div class="services_view-title font--h1">
@@ -163,10 +288,10 @@ await fetchall()
                     </div>
                     <div class="product_card" v-for="items in data._views.slice(pagination.min,pagination.max)">
                         <p class="product_card-name" >{{ items.name }}</p>
-                        <p class="product_card-price" v-if="items.price != 0">
+                        <p class="product_card-price" v-if="items.price != 0" @click="dialogVisible = true">
                         {{items.price}} руб
                         </p>
-                        <p class="product_card-price none-select" v-if="items.price == 0">
+                        <p class="product_card-price none-select" v-if="items.price == 0" @click="dialogVisible = true">
                             Узнать подробнее
                         </p>
                     </div>
@@ -193,9 +318,118 @@ await fetchall()
             </div>
         </div>
     </div>
+
+    <el-dialog
+    class="index"
+    v-model="dialogVisible"
+    title="Оставте заявку"
+    :before-close="handleClose"
+    :width="ismobile?320:450"
+  >
+    <template #header>
+       <p>Оставте заявку и в ближайшее время с вами свяжуться наши специалисты</p>
+    </template>
+    <el-form
+    ref="formRef"
+    :model="numberValidateForm"
+    label-width="100px"
+    class="demo-ruleForm"
+    :label-position="ismobile?'top':'left'"
+    style="max-width: 320"
+  >
+        <el-form-item 
+        label="Имя" 
+        prop="name"
+        :rules="[
+            { required: true, message: 'Заполните', trigger: 'blur' },
+            { min: 2, max: 10, message: 'Введите корректное имя', trigger: 'change' }
+        ]"
+        >
+            <el-input v-model="numberValidateForm.name" 
+            show-word-limit
+            maxlength="10"/>
+        </el-form-item>
+        <el-form-item 
+        label="Фамилия"
+        prop="surname"
+        :rules="[
+        { required: true, message: 'Заполните', trigger: 'blur' },
+        { min: 2, max: 10, message: 'Введите корректную фамилию', trigger: 'change' }
+      ]"
+        >
+            <el-input v-model="numberValidateForm.surname" 
+            show-word-limit
+            maxlength="10"/>
+        </el-form-item>
+        <el-form-item label="Отчество">
+            <el-input v-model="numberValidateForm.firstname" />
+        </el-form-item>
+        <el-form-item 
+        label="Телефон" 
+        prop="phone"
+        :rules="[
+        { required: true, message: 'Заполните', trigger: 'blur' },
+        { min:10,message: 'Введите корректный номер', trigger: 'change' }
+        ]">
+            <el-input v-model="numberValidateForm.phone" maxlength="10">
+                <template #prepend>+7</template>
+            </el-input>
+        </el-form-item>
+    <el-form-item class="mobile_bitton_form">
+      <el-button type="danger" @click="submitForm(formRef)">Отправить</el-button>
+      <el-button type="info" plain @click="resetForm(formRef)">Очистить</el-button>
+    </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
+.active_item{
+    background: rgb(181, 181, 181) !important;
+    border-right: 5px solid rgba(255, 0, 0, 0.286);
+}
+.category{
+    // border: 1px solid;
+    width: 100%;
+    align-self:stretch;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    align-items: flex;
+    &_item{
+        width: 70%;
+        background: rgb(223, 223, 223);
+        // border: 1px solid red;
+        border-radius: 4px;
+        margin: 5px 0;
+        padding: 5px;
+    }
+}
+.info{
+    width: 70%;
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.127);
+    &_img{
+        width: 100%;
+        height: 80px;
+        background: url('../assets/img/ser.png') no-repeat;
+        background-position: center center;
+        background-size: contain;
+    }
+    &_title{
+        margin: 10px 0;
+        font-size: 0.7rem;
+    }
+}
+.index{
+    position: relative;
+    z-index: 1000;
+}
 .btn_disabled{
         cursor: auto !important;
         color: #f5f5f5ab !important;
@@ -305,13 +539,18 @@ await fetchall()
 }
 
 .left_sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     padding: 10px;
     width: 30%;
-    background: rgba(211, 209, 209, 0.292);
+    background: rgba(230, 230, 230, 0.292);
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
     height: 100%;
+    padding-bottom: 160px;
     p{
         padding: 20px;
         height: 120px;

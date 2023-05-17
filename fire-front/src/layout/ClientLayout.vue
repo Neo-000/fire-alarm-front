@@ -55,7 +55,7 @@ onMounted(() => {
     height: 60%;
     width: 100%;
     flex: 1 0 auto;
-    z-index: 50;
+    /* z-index: 50; */
     margin-bottom: 2px;
   }
   .footer_layout{
