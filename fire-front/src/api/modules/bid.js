@@ -10,6 +10,38 @@ const Bid = {
         } catch (error) {
           return [error, null];
         }
+      },
+    async All(data) {
+        try {
+          const result = await API.post(bid.all,data);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      },
+    async Delete(data) {
+        try {
+          const result = await API.post(bid.delete,data);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      },
+    async Delete(data) {
+        try {
+          const result = await API.post(bid.delete,data);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
+      },
+    async Delete_all(data) {
+        try {
+          const result = await API.post(bid.delete,data);
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
       }
 
 }

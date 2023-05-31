@@ -25,19 +25,48 @@ const routes = [
                 name:'404',
                 path:'404',
                 component: () => import('@/views/ErrorPage')
-            },
+            }
         ]
     },
     {
         name:'admin',
         path:'/admin',
-        component: () => import('@/layout/AdminLayout')
+        component: () => import('@/layout/AdminLayout'),
+        redirect:'/admin/bids',
+        children:[
+            {
+                name:'bids',
+                path:'bids',
+                component: () => import('@/views/Admin/BidsPageAdmin')
+            },
+            {
+                name:'catalog',
+                path:'catalog',
+                component: () => import('@/views/Admin/CatalogPageAdmin')
+            },
+            {
+                name:'analitics',
+                path:'analitics',
+                component: () => import('@/views/Admin/AnaliticsPageAdmin')
+            },
+            {
+                name:'orders',
+                path:'orders',
+                component: () => import('@/views/Admin/OrdersPageAdmin')
+            },
+            {
+                name:'404',
+                path:'404',
+                component: () => import('@/views/ErrorPage')
+            }
+        ]
     },
 
 
 
 
-    {path: '/:pathMatch(.*)*', redirect:'/404'}
+    {path: '/:pathMatch(.*)*', redirect:'/404'},
+    {path: '/admin/:pathMatch(.*)*', redirect:'/admin/404'}
 
 ]
 

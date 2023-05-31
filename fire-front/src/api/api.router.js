@@ -32,6 +32,12 @@ const api_router ={
         delete_all:MainAPI.bid + 'delete_all',
         create:MainAPI.bid + 'create'
         
+    },
+    order:{
+        create:MainAPI.order + 'create',
+        all:MainAPI.order + 'all',
+        delete:MainAPI.order + 'delete',
+        delete_all:MainAPI.order + 'delete_all',
     }
 }
 

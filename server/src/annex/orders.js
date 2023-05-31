@@ -25,7 +25,7 @@ class Order{
                 date:tm.hour + ':' + tm.minute + ' ' + tm.year + 'г.',
                 msg:data.msg
             })
-            await db.on();
+            // await db.on();
             await NewOrder.save().then(
                 (result) => {
                     res
@@ -36,7 +36,7 @@ class Order{
                 err => {console.log(err)}
               );
     
-            await db.off();
+            // await db.off();
         }else {
             res
             .status(400)
@@ -44,7 +44,7 @@ class Order{
         }
     }
     async GetAll(req,res){
-        await db.on();
+        // await db.on();
         const all_bid = await order.find({});
         if(all_bid != undefined & all_bid != '' & all_bid.length != ''){
             res
@@ -56,14 +56,14 @@ class Order{
         } else {
             res
             .status(200)
-            .send('Заказов пока что нет')
+            .send({items:0})
         }
-        return await db.off();
+        return true;
     }
     async Delete(req,res){
         const data = req.body;
         if(Object.keys(data).length){
-            await db.on();
+            // await db.on();
             await order.deleteOne({_id:data.id}).then(
                 (result) => {
                     res
@@ -77,7 +77,7 @@ class Order{
                     .send(err)
                 }
             )
-            return await db.off();
+            return true;
         }
         else{
             res
@@ -86,7 +86,7 @@ class Order{
         }
     }
     async DeleteAll(req,res){
-            await db.on();
+            // await db.on();
             await order.deleteMany({}).then(
                 (result) => {
                     res
@@ -100,7 +100,7 @@ class Order{
                     .send('Заказов нет')
                 }
             )
-            return await db.off();
+            return true;
         }
     }
 
