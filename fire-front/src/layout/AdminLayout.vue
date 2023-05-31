@@ -103,7 +103,7 @@ const authorization = () =>{
 }
 .right_content{
   // background: rgba(0, 0, 0, 0.323);
-  outline: 1px solid rgba(128, 128, 128, 0.089);
+  border-left: 2px solid rgba(128, 128, 128, 0.236);
   overflow-x: hidden;
   overflow-y: auto;
     width: 80%;
