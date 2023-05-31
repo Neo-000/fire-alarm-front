@@ -7,13 +7,15 @@ import {Avatar} from '@element-plus/icons-vue';
     <div class="admin_header">
         <p class="admin_header-title">
             Панель Администратора
-        </p>
-        <router-link to="/" class="admin_btn">
-            На главную
-        </router-link>
-        <p class="admin_header-logo">
+            <span class="admin_header-logo">
             <el-icon><Avatar /></el-icon>
+            </span>
         </p>
+            <router-link to="/">
+                <el-button type="success">
+            К клиентской части
+            </el-button>
+        </router-link>
     </div>
 </template>
 <style scoped lang="scss">
@@ -29,6 +31,15 @@ import {Avatar} from '@element-plus/icons-vue';
         }
     }
     .admin_header{
+        &-title{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            @media (max-width:450px) {
+                justify-content: flex-start;
+                font-size: 12px;
+            }
+        }
         &-logo{
             width: 30px;
             height: 30px;
@@ -38,9 +49,15 @@ import {Avatar} from '@element-plus/icons-vue';
             justify-content: center;
             align-items: center;
             color: white;
+            margin-left: 20px;
+            @media (max-width:450px) {
+                margin-left: 5px;
+            }
         }
         display: flex;
+        align-items: center;
         width: 100%;
+        padding: 5px;
         justify-content: space-between;
     }
 

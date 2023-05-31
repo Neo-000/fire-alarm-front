@@ -37,7 +37,7 @@ const Bid = {
       },
     async Delete_all(data) {
         try {
-          const result = await API.post(bid.delete,data);
+          const result = await API.post(bid.delete_all,data);
           return [null, result];
         } catch (error) {
           return [error, null];

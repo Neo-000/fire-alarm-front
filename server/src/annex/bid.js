@@ -9,18 +9,20 @@ class Bid{
         if(Object.keys(req.body).length){
 
             let data = req.body;
-            let date = new Date();
-            let tm ={
-                year: date.getFullYear(),
-                hour: date.getHours(),
-                minute: date.getMinutes()
-            }
+            let date = new Date().toLocaleString('ru',
+            {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour:'numeric',
+                minute:'numeric'
+            });
             const NewBid = new bid({
                 name: data.name,
                 firstname: data.firstname,
                 surname:data.surname,
                 phone:data.phone,
-                date:tm.hour + ':' + tm.minute + ' ' + tm.year + 'г.',
+                date:date,
                 msg:data.msg
             })
             console.log(NewBid)
@@ -56,7 +58,7 @@ class Bid{
         } else {
             res
             .status(200)
-            .send('Заявок пока что нет')
+            .send({items:0})
         }
         // return await db.off();
     }
