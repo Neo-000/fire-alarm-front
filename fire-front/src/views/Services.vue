@@ -389,12 +389,13 @@ console.log(typeof data)
 
 <style scoped lang="scss">
 .active_item{
-    background: rgb(181, 181, 181) !important;
-    border-right: 5px solid rgba(255, 0, 0, 0.286);
+    background: rgba(255, 207, 207, 0.589) !important;
+    border-right: 2px solid rgba(255, 0, 0, 0.551);
 }
 .category{
     // border: 1px solid;
     width: 100%;
+    padding: 10px 0;
     align-self:stretch;
     display: flex;
     align-items: center;
@@ -402,28 +403,59 @@ console.log(typeof data)
     align-items: flex;
     &_item{
         width: 70%;
-        background: rgb(223, 223, 223);
+        background: rgb(236, 236, 236);
         // border: 1px solid red;
-        border-radius: 4px;
-        margin: 5px 0;
+        border-radius: 2px;
+        margin: 2px 0;
         padding: 5px;
     }
+}
+
+@keyframes log-animation {
+    90%{transform: rotate3d(0, 0, 0, 0deg);}
+    // 95%{transform: rotate3d(7, 7, 7, -8deg);}
+    96%{transform: rotate3d(7, 7, 7, 8deg);}
 }
 .info{
     width: 70%;
     padding: 20px;
     border-radius: 4px;
-    border: 1px solid rgba(0, 0, 0, 0.127);
+    background:
+    linear-gradient(
+        217deg, 
+        rgb(255, 100, 100), 
+        rgba(255, 0, 0, 0) 70.71%),
+    linear-gradient(
+        127deg, 
+        rgb(255, 212, 54), 
+        rgba(0,255,0,0) 70.71%),
+    linear-gradient(
+        336deg, 
+        rgba(255, 81, 151, 0.925), 
+        rgba(0,0,255,0) 70.71%);
     &_img{
         width: 100%;
         height: 80px;
         background: url('../assets/img/ser.png') no-repeat;
         background-position: center center;
         background-size: contain;
+        animation-direction: reverse;
+        animation:log-animation 15s ease 0s infinite;
     }
     &_title{
         margin: 10px 0;
         font-size: 0.7rem;
+    }
+    .button{
+        background: #e74d3c9c;
+        color: white;
+        backdrop-filter: blur(10px);
+        transition: all .3s ease-in-out 0s;
+        &:hover{
+            background: #e74d3cf9;
+            transition: all .3s ease-in-out 0s;
+            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.495);
+        }
     }
 }
 .index{
