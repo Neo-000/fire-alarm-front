@@ -20,6 +20,8 @@ const Orders = {
         }
       },
     async delete(data) {
+      console.log('delete')
+      console.log(data)
         try {
           const result = await API.post(orders.delete,data);
           return [null, result];

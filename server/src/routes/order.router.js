@@ -11,6 +11,7 @@ router.post('/all', (req,res) => {
     order.GetAll(req,res);
 })
 router.post('/delete', (req,res) => {
+    console.log(res.data)
     order.Delete(req,res);
 })
 router.post('/delete_all', (req,res) => {
