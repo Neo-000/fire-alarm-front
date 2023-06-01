@@ -129,6 +129,7 @@ watchEffect( async () => {
 }
 .menu{
     @media (max-width:450px) {
+        background: white;
         width: 100%;
         display: flex;
         align-items: center;

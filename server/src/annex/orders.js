@@ -7,13 +7,15 @@ const db = new DbConnect();
 class Order{
     async Create(req,res){
         if(Object.keys(req.body).length){
+            let date = new Date().toLocaleString('ru',
+            {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour:'numeric',
+                minute:'numeric'
+            });
             let data = req.body;
-            let date = new Date();
-            let tm ={
-                year: date.getFullYear(),
-                hour: date.getHours(),
-                minute: date.getMinutes()
-            }
             const NewOrder = new order({
                 title:data.title,
                 object:data.object,
@@ -22,7 +24,7 @@ class Order{
                 surname:data.surname,
                 phone:data.phone,
                 price:data.price,
-                date:tm.hour + ':' + tm.minute + ' ' + tm.year + 'г.',
+                date:date,
                 msg:data.msg
             })
             // await db.on();
@@ -51,7 +53,7 @@ class Order{
             .status(200)
             .send({
                 items:all_bid.length,
-                bids:all_bid
+                orders:all_bid
             })
         } else {
             res
@@ -64,7 +66,7 @@ class Order{
         const data = req.body;
         if(Object.keys(data).length){
             // await db.on();
-            await order.deleteOne({_id:data.id}).then(
+            await order.deleteOne({_id:data._id}).then(
                 (result) => {
                     res
                     .status(200)

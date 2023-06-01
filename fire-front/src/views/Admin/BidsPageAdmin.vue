@@ -3,10 +3,79 @@ import { RouterLink } from 'vue-router';
 import {ref, reactive, onMounted, watchEffect, onBeforeUnmount} from 'vue'
 import {Iphone,Plus, DeleteFilled} from '@element-plus/icons-vue';
 import {Bid} from '../../api/modules/bid.js';
+import {Orders} from '../../api/modules/orders'
 import { ElMessageBox, ElMessage  } from 'element-plus';
+
+const active_id = ref();
+const id_active = reactive(active_id);
+
+let ismobile=ref();
+window.addEventListener('resize' , () => {
+  const sizeX = document.documentElement.clientWidth;
+  if(sizeX <= 450){
+    ismobile.value = true
+  } else {
+    ismobile.value = false
+  }
+})
 
 const _bids = ref();
 const bids = reactive(_bids)
+
+const _orders = ref({
+    title:'',
+    object:'',
+    name:'',
+    firstname:'',
+    surname:'',
+    phone:'',
+    price:'',
+    msg:''
+
+})
+const orders = reactive(_orders);
+const dialogVisible = ref(false);
+const handleClose = () => {
+    resetForm();
+    dialogVisible.value = false;
+}
+const orderForm = (title,name,surname,phone,id) =>{
+    active_id.value = id;
+    orders.value.title = title;
+    orders.value.name = name;
+    orders.value.surname = surname;
+    orders.value.phone = phone;
+    dialogVisible.value = true;
+}
+const resetForm =() =>{
+    for(var item in orders.value){
+        orders.value[`${item}`] = '';
+    }
+}
+const submitOrder = async () =>{
+    await ElMessageBox.confirm('Удалить заявку?')
+            .then(() => {
+                console.log(active_id.value)
+                console.log('yes');
+                deleteBidsByID(active_id.value);
+            })
+            .catch(() => {
+                console.log('no')
+            })
+    const [err, res] = await Orders.Create(orders.value)
+        if(err == null){
+            resetForm();
+            dialogVisible.value = false;
+            active_id.value = '';
+            ElMessage({
+                message: 'Успешно создан заказ',
+                type: 'success',
+            })
+            return true
+        } else return false
+}
+
+
 
 const fetchBidsItems = async () =>{
     const [err, res] = await Bid.All({'_null':'0'})
@@ -39,6 +108,12 @@ const deleteBidsByID = async(id) => {
 }
 let watchinterval;
 onMounted( async () => {
+    const sizeX = document.documentElement.clientWidth;
+    if(sizeX <= 450){
+        ismobile.value = true
+    } else {
+        ismobile.value = false
+    }
     fetchBidsItems();
     watchinterval =  setInterval(() => {
         fetchBidsItems();
@@ -49,6 +124,58 @@ onBeforeUnmount( async () => {
 })
 </script>
 <template>
+    <el-dialog
+        v-model="dialogVisible"
+        title="Оставте заявку"
+        :before-close="handleClose"
+        :width="ismobile?'320':'500'"
+    >
+        <template #header>
+        <p>Создание заказа</p>
+        </template>
+        <el-form
+            ref="formRef"
+            style="max-width: 320"
+            label-width="100px"
+            class="demo-ruleForm"
+            label-position='top'
+        >
+            <el-form-item label="Наименование">
+                <el-input v-model="orders.title"/>
+            </el-form-item>
+            <el-form-item label="Объект и суть работ: "
+            :rules="{ required: true}"
+            >
+                <el-input v-model="orders.object" required="true"/>
+            </el-form-item>
+            <el-form-item label="Имя">
+                <el-input v-model="orders.name"/>
+            </el-form-item>
+            <el-form-item label="Фамилия">
+                <el-input v-model="orders.surname"/>
+            </el-form-item>
+            <el-form-item label="Телефон">
+                <el-input v-model="orders.phone"/>
+            </el-form-item>
+            <el-form-item label="Сумма">
+                <el-input v-model="orders.price"/>
+            </el-form-item>
+            <el-form-item label="Доп информация">
+                <el-input v-model="orders.msg"/>
+            </el-form-item>
+
+            <el-form-item class="mobile_bitton_form">
+                <el-button type="danger" @click="submitOrder">Отправить</el-button>
+                <span style="display: block; width: 20px;"></span>
+                <el-button type="info" plain @click="resetForm">Очистить</el-button>
+            </el-form-item>
+
+        </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+      </span>
+    </template>
+  </el-dialog>
     <div class="btn_group">
         <el-button 
         type="danger" 
@@ -65,40 +192,67 @@ onBeforeUnmount( async () => {
                 <div class="bids_card-date">
                     Дата: {{ item.date }}
                 </div>
-                <el-button 
-                type="danger" 
-                plain
-                @click="deleteBidsByID(item._id)"
-                >
-                    <el-icon><DeleteFilled /></el-icon>
-                </el-button>
             </div>
             <div class="bids_card-footer">
                 <div class="bids_card-name">
-                    {{ item.name }}
+                    Имя: {{ item.name }}
                 </div>
                 <div class="bids_card-surname">
-                    {{ item.surname }}
+                    Фамилия: {{ item.surname }}
                 </div>
                 <div class="bids_card-phone">
-                    +7{{ item.phone }}
+                    Телефон: +7{{ item.phone }}
                 </div>
-                <a :href="'tel:+7' + item.phone">
-                <el-button type="success" plain>
-                    <el-icon><Iphone /></el-icon>
-                    <p class="btn_title">Позвонить</p>
-                </el-button>
-                </a>
-                <el-button type="success" plain>
-                    <el-icon><Plus /></el-icon>
-                    <p class="btn_title">Создать заказ</p>
-                </el-button>
+                <div class="button_group">
+                    <a :href="'tel:+7' + item.phone">
+                        <el-button type="success" plain>
+                        <el-icon><Iphone /></el-icon>
+                        <p class="btn_title">Позвонить</p>
+                    </el-button>
+                    </a>
+                    <el-button type="success" plain @click="orderForm(item.msg,item.name,item.surname,`+7${item.phone}`, item._id)">
+                        <el-icon><Plus /></el-icon>
+                        <p class="btn_title">Создать заказ</p>
+                    </el-button>
+                    <el-button 
+                    type="danger" 
+                    plain
+                    @click="deleteBidsByID(item._id)"
+                    >
+                        <el-icon><DeleteFilled /></el-icon>
+                    </el-button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
+:deep(.el-button+.el-button){
+    margin: 10px 0;
+}
+:deep(.el-form-item){
+    // display: flex;
+    
+    margin-bottom:10px;
+}
+
+.button_group{
+    a{
+        width: 100%;
+        display: flex;
+        margin: 10px 0;
+
+        button{
+            width: 100%;
+        }
+    }
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    // align-items: flex-start;
+    padding: 10px 0;
+}
 .btn_title{
     @media (max-width:450px) {
         display: none;
@@ -119,27 +273,39 @@ onBeforeUnmount( async () => {
     width: 100%;
     padding: 10px;
     margin-bottom: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 
     &_card{
-        width: 60%;
-        margin-bottom: 10px;
+        width: 20%;
+        min-width: 160px;
+        margin: 10px;
         background: rgba(218, 175, 107, 0.122);
         border-radius: 4px;
         padding: 10px;
+        transition: all .2s ease-in-out 0s;
+        &:hover{
+            transition: all .3s ease-in-out 0s;
+            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.174);
+            background: rgba(254, 163, 16, 0.122);
+        }
         @media (max-width:450px) {
-            width: 100%;
+            width: 45%;
         }
         &-header{
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            flex-direction: column;
             margin-bottom: 10px;
             
         }
         &-footer{
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: flex-end;
+            align-items: flex-start;
             font-size: 13px;
 
         }
