@@ -191,7 +191,6 @@ onBeforeUnmount( async () => {
     </div>
     <div class="orders">
         <div class="orders_card" v-for="item in orders">
-            id: {{ item._id }}
             <div class="orders_card-header">
                 <p class="orders_card-title large_title">
                     <span class="item_text">{{ item.title }}</span>
