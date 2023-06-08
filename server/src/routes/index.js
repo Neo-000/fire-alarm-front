@@ -9,6 +9,7 @@ import { services_router } from './services.router.js';
 import { bid_roter } from './bid.router.js';
 import { order_roter } from './order.router.js';
 import { user_router } from './user.router.js';
+import { analiticks_router } from './analiticks.router.js';
 
 router.post("/api", (req,res) => {
     if(req.body.password != undefined & req.body.password != '' & req.body.password != null){
@@ -33,6 +34,7 @@ router.use('/services', services_router);
 router.use('/category', category_router);
 router.use('/bid', bid_roter);
 router.use('/order', order_roter);
-router.use('/user', user_router)
+router.use('/user', user_router);
+router.use('/analiticks', analiticks_router);
 
 export {router}

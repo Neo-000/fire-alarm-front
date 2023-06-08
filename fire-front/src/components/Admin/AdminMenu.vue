@@ -39,7 +39,7 @@ onMounted( async () => {
     watchinterval =  setInterval(() => {
         fetchBidsItems()
         fetchOrdersItems()
-    }, 100);
+    }, 10000);
 })
 onBeforeUnmount( async () => {
     clearInterval(watchinterval)

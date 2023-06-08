@@ -30,9 +30,21 @@ const _orders = ref({
     surname:'',
     phone:'',
     price:'',
-    msg:''
+    msg:'',
+    date_on:'',
+    date_off:''
 
 })
+let date = new Date().toLocaleString('ru',
+            {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour:'numeric',
+                minute:'numeric'
+            });
+
+            _orders.value.date_on = date
 const orders = reactive(_orders);
 const dialogVisible = ref(false);
 const handleClose = () => {
@@ -106,6 +118,7 @@ const deleteBidsByID = async(id) => {
             return true
         } else return false
 }
+
 let watchinterval;
 onMounted( async () => {
     const sizeX = document.documentElement.clientWidth;
@@ -128,7 +141,7 @@ onBeforeUnmount( async () => {
         v-model="dialogVisible"
         title="Оставте заявку"
         :before-close="handleClose"
-        :width="ismobile?'320':'500'"
+        :width="ismobile?'320':'30%'"
     >
         <template #header>
         <p>Создание заказа</p>
@@ -146,7 +159,26 @@ onBeforeUnmount( async () => {
             <el-form-item label="Объект и суть работ: "
             :rules="{ required: true}"
             >
-                <el-input v-model="orders.object" required="true"/>
+                <el-input v-model="orders.object" required="true" :rows="4" type="textarea"/>
+            </el-form-item>
+            <el-form-item label="Начало работ">
+                <el-date-picker
+                    v-model="orders.data_"
+                    type="date"
+                    placeholder="Выбрать дату"
+                    :size="size"
+                />
+            </el-form-item>
+            <el-form-item label="Конечная дата">
+                <el-date-picker
+                    v-model="value1"
+                    type="date"
+                    placeholder="Выбрать дату"
+                    :size="size"
+                />
+            </el-form-item>
+            <el-form-item label="Имя">
+                <el-input v-model="orders.name"/>
             </el-form-item>
             <el-form-item label="Имя">
                 <el-input v-model="orders.name"/>
@@ -183,6 +215,7 @@ onBeforeUnmount( async () => {
         @click="delete_all"
         > Удалить все</el-button>
     </div>
+    <el-empty description="Пока нет ничего" v-if="!bids"/>
     <div class="bids">
         <div class="bids_card" v-for="item in bids">
             <div class="bids_card-header">
@@ -228,13 +261,10 @@ onBeforeUnmount( async () => {
 </template>
 
 <style scoped lang="scss">
+
+
 :deep(.el-button+.el-button){
     margin: 10px 0;
-}
-:deep(.el-form-item){
-    // display: flex;
-    
-    margin-bottom:10px;
 }
 
 .button_group{
@@ -328,5 +358,8 @@ onBeforeUnmount( async () => {
     }
 }
 
+label{
+    display: block;
+}
 
 </style>

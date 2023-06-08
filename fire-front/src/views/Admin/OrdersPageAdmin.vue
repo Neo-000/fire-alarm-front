@@ -189,6 +189,7 @@ onBeforeUnmount( async () => {
         @click="dialogVisible = true"
         > Создать заказ</el-button>
     </div>
+    <el-empty description="Пока нет ничего" v-if="!orders"/>
     <div class="orders">
         <div class="orders_card" v-for="item in orders">
             <div class="orders_card-header">
