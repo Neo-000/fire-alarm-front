@@ -17,6 +17,9 @@ router.post('/delete', (req,res) => {
 router.post('/delete_all', (req,res) => {
     order.DeleteAll(req,res);
 })
+router.post('/update', (req,res) => {
+    order.Update(req,res);
+})
 
 const order_roter = router;
 export {order_roter};

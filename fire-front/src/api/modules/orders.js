@@ -36,6 +36,18 @@ const Orders = {
         } catch (error) {
           return [error, null];
         }
+      },
+    async update(id,data) {
+      console.log('update')
+      console.log(id)
+      console.log(data)
+        try {
+          const result = await API.post(orders.update,{
+            '_id':id,'data':data});
+          return [null, result];
+        } catch (error) {
+          return [error, null];
+        }
       }
 }
 export {Orders}

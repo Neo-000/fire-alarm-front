@@ -10,7 +10,9 @@ const OrdersModel = new Schema({
     phone:Number,
     price:Number,
     date:String,
-    msg:String
+    msg:String,
+    date_on:String,
+    date_off:String
 
 })
 

@@ -14,9 +14,14 @@ const form_orders = ref({
     surname:'',
     phone:'',
     price:'',
-    msg:''
+    msg:'',
+    date_on:'',
+    date_off:'',
+    
+
 
 })
+const activeId = ref();
 const FormOrders = reactive(form_orders);
 const dialogVisible = ref(false);
 const handleClose = () => {
@@ -29,6 +34,22 @@ const resetForm =() =>{
     }
 }
 const submitOrder = async () =>{
+    // var d_on = new Date(FormOrders.value.date_on).toLocaleString('ru',
+    //         {
+    //             day: 'numeric',
+    //             month: 'long',
+    //             year: 'numeric',
+
+    //         });
+    // var d_off = new Date(FormOrders.value.date_off).toLocaleString('ru',
+    //         {
+    //             day: 'numeric',
+    //             month: 'long',
+    //             year: 'numeric',
+    //         });
+
+    //         FormOrders.value.date_on = d_on;
+    //         FormOrders.value.date_off = d_off;
     const [err, res] = await Orders.Create(FormOrders.value)
         if(err == null){
             fetchAllOrders();
@@ -56,6 +77,41 @@ const fetchAllOrders = async () =>{
             _orders.value = res.data.orders;
             return true
         } else return false
+
+}
+const updateActive = ref(false);
+const UpdateOreder = (id, data) =>{
+    activeId.value = id;
+    updateActive.value = true;
+    FormOrders.value.name = data.name;
+    FormOrders.value.firstname = data.firstname;
+    FormOrders.value.object = data.object;
+    FormOrders.value.phone = data.phone;
+    FormOrders.value.price = data.price;
+    FormOrders.value.title = data.title;
+    FormOrders.value.surname = data.surname;
+    FormOrders.value.date_on = data.date_on;
+    FormOrders.value.msg = data.msg;
+    FormOrders.value.date_off = data.date_off;
+    dialogVisible.value = true;
+
+}
+const updateOrderById = async () => {
+    console.log(FormOrders.value);
+    console.log(activeId.value);
+    const [err, res] = await Orders.update(activeId.value, FormOrders.value)
+            if(err == null){
+                dialogVisible.value = false;
+                activeId.value = '';
+                updateActive.value = false;
+                resetForm();
+                fetchAllOrders();
+                ElMessage({
+                message: 'Успешно изменен',
+                type: 'success',
+                })
+                return true
+            } else return false
 
 }
 const delete_all = async () =>{
@@ -145,6 +201,22 @@ onBeforeUnmount( async () => {
             >
                 <el-input v-model="FormOrders.object" required="true"/>
             </el-form-item>
+            <el-form-item label="Начало работ">
+                <el-date-picker
+                    v-model="FormOrders.date_on"
+                    type="date"
+                    placeholder="Выбрать дату"
+                    size="small"
+                />
+            </el-form-item>
+            <el-form-item label="Конечная дата">
+                <el-date-picker
+                    v-model="FormOrders.date_off"
+                    type="date"
+                    placeholder="Выбрать дату"
+                    size="small"
+                />
+            </el-form-item>
             <el-form-item label="Имя">
                 <el-input v-model="FormOrders.name"/>
             </el-form-item>
@@ -162,7 +234,8 @@ onBeforeUnmount( async () => {
             </el-form-item>
 
             <el-form-item class="mobile_bitton_form">
-                <el-button type="danger" @click="submitOrder">Отправить</el-button>
+                <el-button v-if="!updateActive" type="danger" @click="submitOrder">Создать</el-button>
+                <el-button v-if="updateActive" type="danger" @click="updateOrderById">Сохранить</el-button>
                 <span style="display: block; width: 20px;"></span>
                 <el-button type="info" plain @click="resetForm">Очистить</el-button>
             </el-form-item>
@@ -204,6 +277,7 @@ onBeforeUnmount( async () => {
                 </el-button>
             </div>
             <div class="orders_card-content">
+                <div class="orders_card-content-top">
                 <p class="orders_card-item">
                     <span class="large_text">Объект: </span> 
                     <span class="item_text">{{ item.object }}</span>
@@ -216,17 +290,41 @@ onBeforeUnmount( async () => {
                     <span class="large_text">Фамилия: </span>
                     <span class="item_text">{{ item.surname }}</span>
                 </p>
+                <p class="orders_card-item">
+                    <span class="large_text">Начало работ: </span>
+                    <span class="item_text">
+                        {{ new Date(item.date_on).toLocaleString('ru',
+                        {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                        }) }}
+                    </span>
+                </p>
+                <p class="orders_card-item">
+                    <span class="large_text">Окончание работ: </span>
+                    <span class="item_text">
+                        {{ new Date(item.date_off).toLocaleString('ru',
+                        {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                        }) }}
+                    </span>
+                </p>
+                </div>
+                <div class="orders_card-content-bottom">
                 <p class="orders_card-item" v-if="item.phone != undefined">
                     <span class="large_text">Телефон: </span>
                     <a :href="`tel:+${item.phone}`">
-                    <el-button type="success">
+                    <el-button>
                         +{{ item.phone }}
                     </el-button>
                 </a>
                 </p>
                 <p class="orders_card-item" v-if="item.price != null">
                     <span class="large_text">Цена: </span>
-                 {{ item.price }}
+                 {{ item.price }} руб.
                 </p>
                 <p class="orders_card-item" v-if="item.price == null">
                     <span class="large_text">Цена: </span>
@@ -241,6 +339,26 @@ onBeforeUnmount( async () => {
                     <span class="item_text">{{ item.msg }}</span>
                 </p>
                 <p class="orders_card-item">
+                    <el-button 
+                        type="success"
+                        plain
+                        class="btn_del"
+                        @click="UpdateOreder(item._id,{
+                            title:item.title,
+                            object:item.object,
+                            name:item.name,
+                            firstname:item.firstname,
+                            surname:item.surname,
+                            phone:item.phone,
+                            price:item.price,
+                            msg:item.msg,
+                            date_on:item.date_on,
+                            date_off:item.date_off
+                        })"
+                        > Редактировать</el-button>
+                </p>
+                </div>
+                <p class="orders_card-item btn_card">
                     <el-button
                     type="success"
                     >
@@ -253,6 +371,20 @@ onBeforeUnmount( async () => {
 </template>
 
 <style scoped lang="scss">
+.btn_card{
+    width: 100%;
+    // padding: 0 10px;
+    display: flex;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    .el-button{
+        width: 20%;
+        @media (max-width:450px) {
+            width: 100%; 
+            margin-top: 10px;
+        }
+    }
+}
 .item_text{
     display: flex;
     flex-wrap: wrap;
@@ -271,14 +403,15 @@ onBeforeUnmount( async () => {
     padding: 10px;
     margin-bottom: 100px;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     &_card{
-        background: rgba(255, 163, 65, 0.218);
+        background: rgba(255, 163, 65, 0.107);
         padding: 10px;
         border-radius: 3px;
         margin: 5px;
         min-width: 160px;
-        width: 24%;
+        // width: 24%;
         display: flex;
         flex-direction: column;
         // justify-content: space-between;
@@ -296,32 +429,79 @@ onBeforeUnmount( async () => {
 
     }
     &_card-content{
+        &-top{display: flex;
+            margin-bottom: 10px;
+            align-items: baseline;
+            justify-content: space-between;
+            @media (max-width:450px) {
+                flex-wrap: wrap;
+            }
+        & .orders_card-item{
+
+            display: flex;
+            // align-items: center;
+            // justify-content: center;
+            width: 20%;
+            // border:1px solid black;
+            @media (max-width:450px) {
+                width: 45%;
+            }
+        }
+        }
+        &-bottom{display: flex;
+            justify-content: space-between;
+            @media (max-width:450px) {
+                flex-wrap: wrap;
+
+            }
+            & .orders_card-item{
+            width: 20%;
+            // justify-content: center;
+            // border:1px solid black;
+                @media (max-width:450px) {
+                    width: 45%;
+                }
+            }
+        
+        }
         margin-top: 10px;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        @media (max-width:450px) {
+            flex-direction: column;
+        }
 
     }
     &_card-title{
 
     }
     &_card-item{
-        margin: 5px 0;
+        // margin: 5px;
         display: flex;
         flex-direction: column;
+        justify-content: center;
         font-size: 14px;
         font-weight: 600;
+        // margin: 5px;
+        @media (max-width:450px) {
+            margin: 5px;
+        }
 
 
     }
 
 }
 
+.item_text{
+    padding: 4px;
+}
 .large_text{
     font-size: 12px;
     color: grey;
     font-weight: 700;
+    // padding: 3px;
 }
 .large_title{
 

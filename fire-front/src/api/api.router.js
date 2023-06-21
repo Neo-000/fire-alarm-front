@@ -38,6 +38,7 @@ const api_router ={
         all:MainAPI.order + 'all',
         delete:MainAPI.order + 'delete',
         delete_all:MainAPI.order + 'delete_all',
+        update:MainAPI.order + 'update',
     }
 }
 

@@ -35,16 +35,7 @@ const _orders = ref({
     date_off:''
 
 })
-let date = new Date().toLocaleString('ru',
-            {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour:'numeric',
-                minute:'numeric'
-            });
 
-            _orders.value.date_on = date
 const orders = reactive(_orders);
 const dialogVisible = ref(false);
 const handleClose = () => {
@@ -74,6 +65,21 @@ const submitOrder = async () =>{
             .catch(() => {
                 console.log('no')
             })
+    // var d_on = new Date(orders.value.date_on).toLocaleString('ru',
+    //         {
+    //             day: 'numeric',
+    //             month: 'long',
+    //             year: 'numeric'
+    //         });
+    // var d_off = new Date(orders.value.date_off).toLocaleString('ru',
+    //         {
+    //             day: 'numeric',
+    //             month: 'long',
+    //             year: 'numeric'
+    //         });
+
+    // orders.value.date_on = d_on;
+    // orders.value.date_off = d_off;
     const [err, res] = await Orders.Create(orders.value)
         if(err == null){
             resetForm();
@@ -163,18 +169,18 @@ onBeforeUnmount( async () => {
             </el-form-item>
             <el-form-item label="Начало работ">
                 <el-date-picker
-                    v-model="orders.data_"
+                    v-model="orders.date_on"
                     type="date"
                     placeholder="Выбрать дату"
-                    :size="size"
+                    size="small"
                 />
             </el-form-item>
             <el-form-item label="Конечная дата">
                 <el-date-picker
-                    v-model="value1"
+                    v-model="orders.date_off"
                     type="date"
                     placeholder="Выбрать дату"
-                    :size="size"
+                    size="small"
                 />
             </el-form-item>
             <el-form-item label="Имя">
